@@ -16,6 +16,8 @@ import static org.lwjgl.opengl.GL15.glBufferData;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+
+import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 
 import Renderer.Shader;
@@ -50,10 +52,10 @@ public class LevelEditorScene extends Scene{
 
     private float[] vertexArray = {
         //position                  //color
-         0.5f, -0.5f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f, //Bottom right 
-        -0.5f, 0.5f, 0.0f,          0.0f, 1.0f, 0.0f, 1.0f, //Top left     
-         0.5f, 0.5f, 0.0f,          0.0f, 0.0f, 1.0f, 1.0f, //Top right
-        -0.5f, -0.5f, 0.0f,         1.0f, 1.0f, 0.0f, 1.0f, //Bottom left
+         50.5f, -50.5f, 0.0f,         1.0f, 0.0f, 0.0f, 1.0f, //Bottom right 
+        -50.5f, 50.5f, 0.0f,          0.0f, 1.0f, 0.0f, 1.0f, //Top left     
+         50.5f, 50.5f, 0.0f,          0.0f, 0.0f, 1.0f, 1.0f, //Top right
+        -50.5f, -50.5f, 0.0f,         1.0f, 1.0f, 0.0f, 1.0f, //Bottom left
     };
 
     //Must be in counter-clockwise order
@@ -71,6 +73,7 @@ public class LevelEditorScene extends Scene{
 
     @Override
     public void init() {
+        this.camera = new Camera(new Vector2f());
         defaultShader = new Shader("app/assests/shaders/default.glsl");
         defaultShader.compile();
         //Generaate VAO, VBO and EBO buffer objects, and send to GPU
@@ -110,6 +113,8 @@ public class LevelEditorScene extends Scene{
     public void update(float dt) {
         //Bind shader program
         defaultShader.use();
+        defaultShader.uploadMat4f("uProjection", camera.getProjectionMatrix());
+        defaultShader.uploadMat4f("uView", camera.getViewMatrix());
         //bind the VAO
         glBindVertexArray(vaoID);
         
