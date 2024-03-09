@@ -47,6 +47,10 @@ public class Shader {
     private String filepath;
 
     public Shader(String filepath) {
+        //=======================================
+        //Reads in the glsl file (Shader program)
+        //=======================================
+
         this.filepath = filepath;
         try{
             String source = new String(Files.readAllBytes(Paths.get(filepath)));
@@ -89,8 +93,8 @@ public class Shader {
             assert false : "Error: Could not open file for shadeL '" + filepath + "'";
         }
 
-        System.out.println(vertexSource);
-        System.out.println(fragmentSource);
+        // System.out.println(vertexSource);
+        // System.out.println(fragmentSource);
 
     }
 
@@ -98,6 +102,7 @@ public class Shader {
         //############################
         //Compile and link the shaders
         //############################
+        
         int vertexID, fragmentID;
         //Load and compile the vertex shader
         vertexID = glCreateShader(GL_VERTEX_SHADER);
@@ -205,5 +210,11 @@ public class Shader {
         int varLocation = glGetUniformLocation(shaderProgramID, varName);
         use();
         glUniform1i(varLocation, val);
+    }
+
+    public void uploadTexture(String varName, int slot) {
+        int varLocation = glGetUniformLocation(shaderProgramID, varName);
+        use();
+        glUniform1i(varLocation, slot);
     }
 }
