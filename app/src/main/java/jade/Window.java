@@ -62,10 +62,12 @@ public class Window {
             case 0:
                 currentScene = new LevelEditorScene();
                 currentScene.init(); 
+                currentScene.start();
                 break;
             case 1:
                 currentScene = new LevelScene();
                 currentScene.init();
+                currentScene.start();
                 break;
             default:
                 assert false : "unknow scene '" + newScene + "'";
@@ -82,6 +84,11 @@ public class Window {
         return Window.window;
     }
 
+    public static Scene getScene() {
+        return currentScene;
+    }
+
+    @SuppressWarnings("null")
     public void run() {
         System.out.println("Hello LWJGL" + Version.getVersion() + "!");
 
@@ -99,6 +106,8 @@ public class Window {
 
     public void init() {
         // Setup an error callback
+        System.out.println("Window is created in Window.init()");
+
         GLFWErrorCallback.createPrint(System.err).set();
 
         //Initialize GLFW
@@ -114,10 +123,6 @@ public class Window {
 
         //Create the window
         glfwWindow = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
-        System.out.println(this.width);
-        System.out.println(this.height);
-        System.out.println(this.title);
-
         glfwSetCursorPosCallback(glfwWindow, MouseListener::mousePosCallback);
         glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
         glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
@@ -166,6 +171,4 @@ public class Window {
             beginTime = endTime;
         }
     }
-
-
 }

@@ -2,7 +2,7 @@ package Renderer;
 
 import static org.lwjgl.opengl.GL11.GL_NEAREST;
 import static org.lwjgl.opengl.GL11.GL_REPEAT;
-import static org.lwjgl.opengl.GL11.GL_RGB;
+// import static org.lwjgl.opengl.GL11.GL_RGB;
 import static org.lwjgl.opengl.GL11.GL_RGBA;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
@@ -47,21 +47,15 @@ public class Texture {
         IntBuffer height = BufferUtils.createIntBuffer(1);
         IntBuffer channels = BufferUtils.createIntBuffer(1);
         //Load the image
-        ByteBuffer image = stbi_load(filepath, width, height, channels, 0);
+        ByteBuffer image = stbi_load(this.filepath, width, height, channels, 0);
 
-        System.out.println("Before error check");
         if (image != null) {
-            System.out.println("Image succesfully loaded");
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width.get(0), height.get(0), 
                         0, GL_RGBA, GL_UNSIGNED_BYTE, image);
         } else {
-            System.out.println("We ran into error, could not load image" + filepath);
             assert false : "Error: Could not load image '" + filepath + "'";
         }
-        System.out.println("after error check");
-
         stbi_image_free(image); // Free the memory allocated for the image (Prevents memory leak)
-
     }
 
 

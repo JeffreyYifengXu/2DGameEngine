@@ -1,0 +1,46 @@
+Main.java
+The file tha is first executed when clicking run. 
+- creates a new window by calling the Window.get() which returns a new window object. 
+- Execute window.run()
+
+
+Window.java
+#####################################
+- Window.run() is called from main, it then executes the init() and loop() file. If the use close the window, free the memory then terminate.
+
+
+
+
+- public void init() (Creates the window)
+-------------------------------------
+Initialize GLFW by calling glfwinit(). Then, configure the GLFW by setting various parameters by calling glfwWindowhint():
+	- Initiallly set the window to be invisible then allow resize and is maximized
+Then create the window using glfwCreateWindow() and set mouse and keyboard callback by passing the corresponding callback function into glfwSetCursorPosCallback etc.
+
+- public void loop()
+-------------------------------------
+Main loop of the program. First setsup delta time variable which keeps track of time passed upon opening the window. This main loop mainly calls the currentScene.update() and pass in the delta time variable
+
+
+LevelEditorScene.java
+#####################################
+Manages the current scene that is displayed on the screen
+update() is called from Window loop.
+
+- public void update()
+In a nutshell it does the following:
+	- Execute shader program by calling defaultShade.use()
+	- Upload the texture to the shader.
+
+
+
+
+
+
+MouseListener.java
+#####################################
+- public static void MousePosCallback()
+Calls get() function which initialize and returns MouseListener object. Then updates the position of mouse. Same goes with mouseButtonCallback, mouseScrollCallback and keyboardcallbacks.
+
+
+
