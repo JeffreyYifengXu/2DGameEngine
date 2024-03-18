@@ -31,8 +31,6 @@ public abstract class Scene {
             this.renderer.add(go);
         }
 
-        // System.out.println("Number of batches in renderer is: " + renderer.batches.size());
-
         isRunning = true;
     }
 
@@ -51,6 +49,4 @@ public abstract class Scene {
     public Camera camera() {
         return this.camera;
     }
-
-    
 }
