@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class RenderBatch {
-    //vertex
+    //a single vertex
     //Position          Colour                          Tex Coords      Tex id
     //float, float,     float, float, float, float,     float, float    float
 
@@ -40,6 +40,7 @@ public class RenderBatch {
     private final int COLOUR_SIZE = 4;
     private final int TEX_COORDS_SIZE = 2;
     private final int TEX_ID_SIZE = 1;
+    private final int MAX_NUM_OF_TEXTURES = 8;
 
     private final int POS_OFFSET = 0;
     private final int COLOUR_OFFSET = POS_OFFSET + POS_SIZE * Float.BYTES;
@@ -128,9 +129,20 @@ public class RenderBatch {
     }
 
     public void render() {
-        //Rebuffer all data every frame for now
-        glBindBuffer(GL_ARRAY_BUFFER, vboID);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
+        boolean rebufferData = false;
+        for (int i=0; i < numSprites; i++) {
+            SpriteRenderer spr = sprites[i];
+            if (spr.isDirty()) {
+                loadVertexProperties(i);
+                spr.setClean();
+                rebufferData = true;
+            }
+        }
+
+        if (rebufferData) { //Rebuffer frame if something changes
+            glBindBuffer(GL_ARRAY_BUFFER, vboID);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
+        }
 
         //Use Shader
         shader.use();
@@ -244,6 +256,14 @@ public class RenderBatch {
 
     public boolean hasRoom() {
         return this.hasRoom;
+    }
+
+    public boolean hasTextureRoom() {
+        return this.textures.size() < MAX_NUM_OF_TEXTURES;
+    }
+
+    public boolean hasTexture(Texture tex) {
+        return this.textures.contains(tex);
     }
 
     public int getNumSprites() {
