@@ -4,8 +4,8 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import Renderer.Texture;
-import jade.Component;
-import jade.Transform;
+import engine.Component;
+import engine.Transform;
 
 public class SpriteRenderer extends Component {
 

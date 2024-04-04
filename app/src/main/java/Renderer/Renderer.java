@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import components.SpriteRenderer;
-import jade.GameObject;
+import engine.GameObject;
 
 public class Renderer {
     private final int MAX_BATCH_SIZE = 1000;
