@@ -8,18 +8,34 @@ public class Camera {
     private Matrix4f projectionMatrix, viewMatrix;
     public Vector2f position;
 
+    /**
+     * Initializer for the camera class, takes in the position of the game camera.
+     * Creates a new projection matrix and a new view matrix.
+     * Calls adjustProjection method
+     * 
+     * @param position
+     */
+
     public Camera(Vector2f position) {
         this.position = position;
         this.projectionMatrix = new Matrix4f();
         this.viewMatrix = new Matrix4f();
         adjustProjection();
     }
-
+    
+    /**
+     * Set the projection matrix to be an identity matrix
+     * Apply orthographic projection transformation for a right handed coordinate system.
+     */
     public void adjustProjection() {
         projectionMatrix.identity();
         projectionMatrix.ortho(0.0f, 32.0f * 40.0f, 0.0f, 32.0f * 21.0f, 0.0f, 100.0f);
     }
 
+    /**
+     * Creates the view matrix. 
+     * @return Current viewmatrix
+     */
     public Matrix4f getViewMatrix() {
         Vector3f cameraFront = new Vector3f(0.0f, 0.0f, -1.0f);
         Vector3f cameraUp = new Vector3f(0.0f, 1.0f, 0.0f);

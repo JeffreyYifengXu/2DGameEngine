@@ -179,7 +179,7 @@ public class RenderBatch {
         //Find offset within array which is 4 vertices per sprite and 6 floats per vertices 
         //position position red green blue alpha (Floats)
         int offset = index * 4 * VERTEX_SIZE;
-        
+                
         Vector4f color = sprite.getColour();
         Vector2f[] texCoords = sprite.getTexCoords();
 

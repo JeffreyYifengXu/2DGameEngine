@@ -2,10 +2,15 @@ package engine;
 
 import org.joml.Vector2f;
 
-import components.Sprite;
 import components.SpriteRenderer;
 import components.Spritesheet;
 import util.AssetPool;
+
+/**
+ * Allows admin to edit the levels of the game, contains the main update loop of the game
+ * 
+ * @author Jeffrey Xu, referencing GamesWithGabe
+ */
 
 public class LevelEditorScene extends Scene{
 
@@ -13,10 +18,16 @@ public class LevelEditorScene extends Scene{
     private Spritesheet sprites;
 
     private GameObject mario;
-    
+
     public LevelEditorScene() {
     }
 
+    /**
+     * Makes the preparation before the main game loop starts, called once when game starts.
+     * Load resources: shader and spirte sheet.
+     * Sets up the game camera.
+     * Creates the gameObjects: main character, enimies etc.
+     */
     @Override
     public void init() {
         loadResources();
@@ -34,6 +45,9 @@ public class LevelEditorScene extends Scene{
         this.addGameObjectToScene(goomba);
     }
 
+    /**
+     * Load the shader and spritesheet from designated directory
+     */
     private void loadResources() {
         AssetPool.getShader("app/assets/shaders/default.glsl");
 
@@ -46,6 +60,10 @@ public class LevelEditorScene extends Scene{
     private float spriteFlipTime = 0.2f;
     private float spriteFlipTImeLeft = 0.0f;
 
+    /**
+     * The main update function of the game.
+     * Render the sprites and update the gameobjects. Called by the main loop from Window class
+     */
     @Override
     public void update(float dt) {
         spriteFlipTImeLeft -= dt;

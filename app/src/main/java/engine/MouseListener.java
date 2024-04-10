@@ -3,6 +3,10 @@ package engine;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
+/**
+ * Manage and process all mouse input
+ * @author Jeffrey Xu, referencing GameWithGabe
+ */
 public class MouseListener {
     private static MouseListener instance;
     private double scrollX, scrollY;
@@ -19,6 +23,9 @@ public class MouseListener {
         this.lastY = 0.0;
     }
 
+    /**
+     * @return current MouseListenser instance
+     */
     public static MouseListener get() {
         //first time calling get, create a new instance
         if (MouseListener.instance == null) {
@@ -28,6 +35,12 @@ public class MouseListener {
         return MouseListener.instance;
     }
 
+    /**
+     * Callback function for the movement of the mouse 
+     * @param window
+     * @param x
+     * @param y
+     */
     public static void mousePosCallback(long window, double x, double y) {
         get().lastX = get().x;
         get().lastY = get().y;
@@ -36,6 +49,13 @@ public class MouseListener {
         get().isDragging = get().mouseButtonPressed[0] || get().mouseButtonPressed[1] || get().mouseButtonPressed[2];
     }
 
+    /**
+     * Call back function for the mouse buttons
+     * @param window
+     * @param button
+     * @param action
+     * @param mods
+     */
     public static void mouseButtonCallback(long window, int button, int action, int mods) {
         if (action == GLFW_PRESS) {
             //Ensure that only conventional mouse buttons were pressed
@@ -48,11 +68,20 @@ public class MouseListener {
         }
     }
 
+    /**
+     * Call back function for the scrolling on the mouse
+     * @param window
+     * @param xOffset
+     * @param yOffset
+     */
     public static void mouseScrollCallback(long window, double xOffset, double yOffset) {
         get().scrollX = xOffset;
         get().scrollY = yOffset;
     }
 
+    /**
+     * Update at the end of the each frame
+     */
     public static void endFrame() {
         get().scrollX = 0;
         get().scrollY = 0;

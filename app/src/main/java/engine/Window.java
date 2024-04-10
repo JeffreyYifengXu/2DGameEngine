@@ -35,7 +35,9 @@ import org.lwjgl.opengl.GL;
 import util.Time;
 
 
-
+/**
+ * Manages the window for the game
+ */
 public class Window {
     private int width, height;
     private String title;
@@ -57,6 +59,12 @@ public class Window {
         a = 1;
     }
 
+    /**
+     * Change scene depending on the input parameter
+     * LevelEditorScene: For editing
+     * LevelScene: For actual game play
+     * @param newScene
+     */
     public static void changeScene(int newScene) {
         switch (newScene) {
             case 0:
@@ -75,7 +83,9 @@ public class Window {
         }
     }
 
-    // Ensures theres only one window active
+    /**
+     * @return current active window
+     */
     public static Window get() {
         if (Window.window == null) {
             Window.window = new Window();
@@ -84,10 +94,16 @@ public class Window {
         return Window.window;
     }
 
+    /**
+     * @return currentScene
+     */
     public static Scene getScene() {
         return currentScene;
     }
 
+    /**
+     * Called once, initialize the window and starts the loop
+     */
     @SuppressWarnings("null")
     public void run() {
         System.out.println("Hello LWJGL" + Version.getVersion() + "!");
@@ -104,6 +120,9 @@ public class Window {
         glfwSetErrorCallback(null).free();
     }
 
+    /**
+     * Initialize the window, make preparations using GLFW library
+     */
     public void init() {
         // Setup an error callback
         System.out.println("Window is created in Window.init()");
@@ -146,6 +165,10 @@ public class Window {
         Window.changeScene(0);
     }
 
+    /**
+     * Main loop for the window, calculates the delta time variable at each iteration.
+     * Then, update the current scene.
+     */
     public void loop() {
         //setup delta time variable
         float beginTime = Time.getTime();
