@@ -30,7 +30,7 @@ import util.AssetPool;
 import java.util.List;
 import java.util.ArrayList;
 
-public class RenderBatch {
+public class RenderBatch implements Comparable<RenderBatch>{
     //a single vertex
     //Position          Colour                          Tex Coords      Tex id
     //float, float,     float, float, float, float,     float, float    float
@@ -59,10 +59,13 @@ public class RenderBatch {
     private int vaoID, vboID;
     private int maxBatchSize;
     private Shader shader;
+    private int zIndex;
 
-    public RenderBatch(int maxBatchSize) { //maxBatchsize tells exactly how many quads are going to be used.
+    public RenderBatch(int maxBatchSize, int zIndex) { //maxBatchsize tells exactly how many quads are going to be used.
         // shader = new Shader("app/assets/shaders/default.glsl");
         // shader.compile();
+        this.zIndex = zIndex;
+
         shader = AssetPool.getShader("app/assets/shaders/default.glsl");
         
         this.sprites = new SpriteRenderer[maxBatchSize];
@@ -268,5 +271,19 @@ public class RenderBatch {
 
     public int getNumSprites() {
         return this.numSprites;
+    }
+
+    public int zIndex() {
+        return this.zIndex;
+    }
+
+    /**
+     * Compare two gameobject based on their zIndex. Which determines which is redered first.
+     * @param o
+     * @return
+     */
+    @Override
+    public int compareTo(RenderBatch o) {
+        return  Integer.compare(this.zIndex, o.zIndex());
     }
 }

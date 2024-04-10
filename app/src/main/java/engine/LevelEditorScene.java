@@ -2,6 +2,7 @@ package engine;
 
 import org.joml.Vector2f;
 
+import components.Sprite;
 import components.SpriteRenderer;
 import components.Spritesheet;
 import util.AssetPool;
@@ -36,12 +37,16 @@ public class LevelEditorScene extends Scene{
 
         this.sprites = AssetPool.getSpritesheet("app/assets/images/spritesheet.png");
 
-        mario = new  GameObject("Mario", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)));
-        mario.addComponent(new SpriteRenderer(sprites.getSprite(0)));
+        mario = new  GameObject("Mario", new Transform(new Vector2f(200, 100), new Vector2f(256, 256)), 4);
+        mario.addComponent(new SpriteRenderer(new Sprite(
+            AssetPool.getTexture("app/assets/images/blendImage1.png")
+        )));
         this.addGameObjectToScene(mario);
 
-        GameObject goomba = new  GameObject("Goomba", new Transform(new Vector2f(400, 400), new Vector2f(256, 256)));
-        goomba.addComponent(new SpriteRenderer(sprites.getSprite(15)));
+        GameObject goomba = new  GameObject("Goomba", new Transform(new Vector2f(400, 100), new Vector2f(256, 256)), -1);
+        goomba.addComponent(new SpriteRenderer(new Sprite(
+            AssetPool.getTexture("app/assets/images/blendImage2.png")
+        )));
         this.addGameObjectToScene(goomba);
     }
 
@@ -56,25 +61,12 @@ public class LevelEditorScene extends Scene{
                 16, 16, 26, 0));
     }
 
-    private int spriteIndex = 0;
-    private float spriteFlipTime = 0.2f;
-    private float spriteFlipTImeLeft = 0.0f;
-
     /**
      * The main update function of the game.
      * Render the sprites and update the gameobjects. Called by the main loop from Window class
      */
     @Override
     public void update(float dt) {
-        spriteFlipTImeLeft -= dt;
-        if (spriteFlipTImeLeft <= 0) {
-            spriteFlipTImeLeft = spriteFlipTime;
-            spriteIndex++;
-            if (spriteIndex > 4) {
-                spriteIndex = 0;
-            }
-            mario.getComponent(SpriteRenderer.class).setSprite(sprites.getSprite(spriteIndex));
-        }
 
         for (GameObject go: this.gameObjects) {
             go.update(dt);
