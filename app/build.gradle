@@ -29,10 +29,10 @@ application {
     mainClass = 'physics_engine.App.'
 }
 
-tasks.named('test') {
-    // Use JUnit Platform for unit tests.
-    useJUnitPlatform()
-}
+// tasks.named('test') {
+//     // Use JUnit Platform for unit tests.
+//     useJUnitPlatform()
+// }
 
 run {
     enableAssertions = true
@@ -42,7 +42,14 @@ project.ext.lwjglVersion = "3.3.3"
 project.ext.lwjglNatives = "natives-windows"
 
 dependencies {
+	//imgui files
+	// implementation "io.github.spair:imgui-java-app:1.81.0"
+	implementation fileTree('libs') { include '*.jar'}
+
+	//joml files
 	implementation files("joml-1.10.5.jar")
+
+	//lwjgl files
 	implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
 
 	implementation "org.lwjgl:lwjgl"

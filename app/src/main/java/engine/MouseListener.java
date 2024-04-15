@@ -41,11 +41,11 @@ public class MouseListener {
      * @param x
      * @param y
      */
-    public static void mousePosCallback(long window, double x, double y) {
+    public static void mousePosCallback(long window, double xpos, double ypos) {
         get().lastX = get().x;
         get().lastY = get().y;
-        get().x = x;
-        get().y = y;
+        get().x = xpos;
+        get().y = ypos;
         get().isDragging = get().mouseButtonPressed[0] || get().mouseButtonPressed[1] || get().mouseButtonPressed[2];
     }
 

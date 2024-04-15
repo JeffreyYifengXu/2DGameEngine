@@ -16,6 +16,7 @@ import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetScrollCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
@@ -46,7 +47,9 @@ import util.Time;
 public class Window {
     private int width, height;
     private String title;
+    
     private long glfwWindow;
+    private ImGuiLayer imguiLayer;
 
     public float r, g, b, a;
 
@@ -151,6 +154,10 @@ public class Window {
         glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
         glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
         glfwSetKeyCallback(glfwWindow, KeyListener::KeyCallback);
+        glfwSetWindowSizeCallback(glfwWindow, (w, newWidth, newHeight) -> {
+            Window.setWidth(newWidth);
+            Window.setHeight(newHeight);
+        });
 
 
         if (glfwWindow == NULL) {
@@ -169,6 +176,10 @@ public class Window {
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+        //Create and initialise imgui
+        imguiLayer = new ImGuiLayer(glfwWindow);
+        imguiLayer.init();
 
         Window.changeScene(0);
     }
@@ -195,11 +206,30 @@ public class Window {
                 currentScene.update(dt);
             }
 
+            //imgui stuff
+            imguiLayer.update(dt);
+
             glfwSwapBuffers(glfwWindow);
 
             endTime = Time.getTime();
             dt = endTime - beginTime;
             beginTime = endTime;
         }
+    }
+
+    public static int getWidth() {
+        return get().width;
+    }
+
+    public static int getHeight() {
+        return get().height;
+    }
+
+    public static void setWidth(int newWidth) {
+        get().width = newWidth;
+    }
+
+    public static void setHeight(int newHeight) {
+        get().height = newHeight;
     }
 }
