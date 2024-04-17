@@ -3,12 +3,15 @@ package engine;
 import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
 import static org.lwjgl.glfw.GLFW.glfwSetCursor;
 
+import imgui.ImFontAtlas;
+import imgui.ImFontConfig;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.callback.ImStrConsumer;
 import imgui.callback.ImStrSupplier;
 import imgui.flag.ImGuiBackendFlags;
 import imgui.flag.ImGuiConfigFlags;
+import imgui.flag.ImGuiFreeTypeBuilderFlags;
 import imgui.flag.ImGuiKey;
 import imgui.flag.ImGuiMouseCursor;
 import imgui.gl3.ImGuiImplGl3;
@@ -52,38 +55,17 @@ public class ImGuiLayer {
      * Updates the interface corresponding to the frame
      */
 
-    public void update(float dt) {
+    public void update(float dt, Scene currentScene) {
         startFrame(dt);
 
+        // Code goes between newFrame and render
         ImGui.newFrame();
+        currentScene.sceneimgui();
         ImGui.showDemoWindow();
         ImGui.render();
 
-        // //Render in imgui window
-        // ImGui.begin("Cool Window");
-
-        // if (ImGui.button("I am a button")) {
-        //     showText = true;
-        // }
-
-        // if (showText) {
-        //     ImGui.text("You clicked a button");
-        //     ImGui.sameLine();
-        //     if (ImGui.button("Stop showing text")) {
-        //         showText = false;
-        //     }
-        // }
-
         //end of frame
         imGuiGl3.renderDrawData(ImGui.getDrawData());
-
-        // //End frame
-        // if (ImGui.getIO().hasConfigFlags(ImGuiConfigFlags.ViewportsEnable)) {
-        //     final long backupWindowptr = org.lwjgl.glfw.GLFW.glfwGetCurrentContext();
-        //     ImGui.updatePlatformWindows();
-        //     ImGui.renderPlatformWindowsDefault();
-        //     GLFW.glfwMakeContextCurrent(backupWindowptr);
-        // }
     }
 
     private void initImGui() {
@@ -95,7 +77,7 @@ public class ImGuiLayer {
         // Initialize ImGuiIO config
         final ImGuiIO io = ImGui.getIO();
 
-        io.setIniFilename(null); // We don't want to save .ini file
+        io.setIniFilename("imgui.ini"); // saves the window configuration
         io.setConfigFlags(ImGuiConfigFlags.NavEnableKeyboard); // Navigation with keyboard
         io.setBackendFlags(ImGuiBackendFlags.HasMouseCursors); // Mouse cursors to display while resizing windows etc.
         io.setBackendPlatformName("imgui_java_impl_glfw");
@@ -205,40 +187,21 @@ public class ImGuiLayer {
         // Fonts configuration
         // Read: https://raw.githubusercontent.com/ocornut/imgui/master/docs/FONTS.txt
 
-//        final ImFontAtlas fontAtlas = io.getFonts();
-//        final ImFontConfig fontConfig = new ImFontConfig(); // Natively allocated object, should be explicitly destroyed
-//
-//        // Glyphs could be added per-font as well as per config used globally like here
-//        fontConfig.setGlyphRanges(fontAtlas.getGlyphRangesCyrillic());
-//
-//        // Add a default font, which is 'ProggyClean.ttf, 13px'
-//        fontAtlas.addFontDefault();
-//
-//        // Fonts merge example
-//        fontConfig.setMergeMode(true); // When enabled, all fonts added with this config would be merged with the previously added font
-//        fontConfig.setPixelSnapH(true);
-//
-//        fontAtlas.addFontFromMemoryTTF(loadFromResources("basis33.ttf"), 16, fontConfig);
-//
-//        fontConfig.setMergeMode(false);
-//        fontConfig.setPixelSnapH(false);
-//
-//        // Fonts from file/memory example
-//        // We can add new fonts from the file system
-//        fontAtlas.addFontFromFileTTF("src/test/resources/Righteous-Regular.ttf", 14, fontConfig);
-//        fontAtlas.addFontFromFileTTF("src/test/resources/Righteous-Regular.ttf", 16, fontConfig);
-//
-//        // Or directly from the memory
-//        fontConfig.setName("Roboto-Regular.ttf, 14px"); // This name will be displayed in Style Editor
-//        fontAtlas.addFontFromMemoryTTF(loadFromResources("Roboto-Regular.ttf"), 14, fontConfig);
-//        fontConfig.setName("Roboto-Regular.ttf, 16px"); // We can apply a new config value every time we add a new font
-//        fontAtlas.addFontFromMemoryTTF(loadFromResources("Roboto-Regular.ttf"), 16, fontConfig);
-//
-//        fontConfig.destroy(); // After all fonts were added we don't need this config more
-//
-//        // ------------------------------------------------------------
-//        // Use freetype instead of stb_truetype to build a fonts texture
-//        ImGuiFreeType.buildFontAtlas(fontAtlas, ImGuiFreeType.RasterizerFlags.LightHinting);
+       final ImFontAtlas fontAtlas = io.getFonts(); // Spritesheet that contains all alphanumeric characters.
+       final ImFontConfig fontConfig = new ImFontConfig(); // Natively allocated object
+
+       fontConfig.setGlyphRanges(fontAtlas.getGlyphRangesDefault());//Set what type of characters is wanted (chinese, alphabet etc)
+
+       fontConfig.setPixelSnapH(true);
+       fontAtlas.addFontFromFileTTF("app/assets/fonts/BAUHS93.ttf", 32, fontConfig);
+ 
+
+       fontConfig.destroy(); // After all fonts were added we don't need this config more
+
+        // ------------------------------------------------------------
+        //Build font
+        fontAtlas.setFlags(ImGuiFreeTypeBuilderFlags.LightHinting);
+        fontAtlas.build();
 
         // Method initializes LWJGL3 renderer.
         // This method SHOULD be called after you've initialized your ImGui configuration (fonts and so on).

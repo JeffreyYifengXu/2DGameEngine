@@ -43,7 +43,6 @@ project.ext.lwjglNatives = "natives-windows"
 
 dependencies {
 	//imgui files
-	// implementation "io.github.spair:imgui-java-app:1.81.0"
 	implementation fileTree('libs') { include '*.jar'}
 
 	//joml files

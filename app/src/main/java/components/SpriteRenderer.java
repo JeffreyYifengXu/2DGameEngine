@@ -6,6 +6,7 @@ import org.joml.Vector4f;
 import Renderer.Texture;
 import engine.Component;
 import engine.Transform;
+import imgui.ImGui;
 
 public class SpriteRenderer extends Component {
 
@@ -39,6 +40,19 @@ public class SpriteRenderer extends Component {
             this.gameObject.transform.copy(this.lastTransform);
             this.isDirty = true;
         }
+    }
+
+    /**
+     * Allows for changing colour using the imgui menu
+     */
+    @Override
+    public void imgui() {
+        float[] imColour = {colour.x, colour.y, colour.z, colour.w};
+        if (ImGui.colorPicker4("Colour Picker: ", imColour)) {
+            this.colour.set(imColour[0], imColour[1], imColour[2], imColour[3]);
+            this.isDirty = true;
+        }
+
     }
 
     public Vector4f getColour() {

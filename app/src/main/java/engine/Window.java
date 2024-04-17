@@ -8,6 +8,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
 import static org.lwjgl.glfw.GLFW.glfwDefaultWindowHints;
 import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
+import static org.lwjgl.glfw.GLFW.glfwGetMonitorPhysicalSize;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
@@ -142,6 +143,10 @@ public class Window {
             throw new IllegalStateException("Unable to initialize GLFW.");
         }
 
+        // //Retrieve current monitor info
+        // int widthMM, heightMM;
+        // glfwGetMonitorPhysicalSize(, widthMM, heightMM);
+
         //Configure GLFW
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
@@ -207,7 +212,7 @@ public class Window {
             }
 
             //imgui stuff
-            imguiLayer.update(dt);
+            this.imguiLayer.update(dt, currentScene);
 
             glfwSwapBuffers(glfwWindow);
 

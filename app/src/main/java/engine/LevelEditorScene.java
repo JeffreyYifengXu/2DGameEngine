@@ -5,6 +5,7 @@ import org.joml.Vector2f;
 import components.Sprite;
 import components.SpriteRenderer;
 import components.Spritesheet;
+import imgui.ImGui;
 import util.AssetPool;
 
 /**
@@ -48,6 +49,8 @@ public class LevelEditorScene extends Scene{
             AssetPool.getTexture("app/assets/images/blendImage2.png")
         )));
         this.addGameObjectToScene(goomba);
+
+        this.activeGameObject = mario;
     }
 
     /**
@@ -72,5 +75,12 @@ public class LevelEditorScene extends Scene{
             go.update(dt);
         }
         this.renderer.render();
+    }
+
+    @Override
+    public void imgui() {
+        ImGui.begin("test window");
+        ImGui.text("Testing testing");
+        ImGui.end();
     }
 }
