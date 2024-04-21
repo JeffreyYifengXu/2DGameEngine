@@ -8,7 +8,6 @@ import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
 import static org.lwjgl.glfw.GLFW.glfwDefaultWindowHints;
 import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
-import static org.lwjgl.glfw.GLFW.glfwGetMonitorPhysicalSize;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
@@ -151,7 +150,7 @@ public class Window {
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-        glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+        // glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
         //Create the window
         glfwWindow = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
@@ -199,6 +198,7 @@ public class Window {
         float endTime = Time .getTime();
         float dt = -1.0f;
 
+        currentScene.load(); //load current level
         //Main loop
         while (!glfwWindowShouldClose(glfwWindow)) {
             //Poll events
@@ -209,10 +209,10 @@ public class Window {
 
             if (dt >= 0){// Ensure no update is done during the first iteration
                 currentScene.update(dt);
-            }
 
-            //imgui stuff
-            this.imguiLayer.update(dt, currentScene);
+                //imgui stuff
+                this.imguiLayer.update(dt, currentScene);
+            }
 
             glfwSwapBuffers(glfwWindow);
 
@@ -220,6 +220,8 @@ public class Window {
             dt = endTime - beginTime;
             beginTime = endTime;
         }
+
+        currentScene.saveExit(); //Save current progress
     }
 
     public static int getWidth() {

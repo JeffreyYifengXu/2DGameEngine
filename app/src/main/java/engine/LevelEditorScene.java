@@ -1,6 +1,10 @@
 package engine;
 
 import org.joml.Vector2f;
+import org.joml.Vector4f;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import components.Sprite;
 import components.SpriteRenderer;
@@ -22,6 +26,7 @@ public class LevelEditorScene extends Scene{
     private GameObject mario;
 
     public LevelEditorScene() {
+
     }
 
     /**
@@ -33,24 +38,47 @@ public class LevelEditorScene extends Scene{
     @Override
     public void init() {
         loadResources();
-
         this.camera = new Camera(new Vector2f());
+
+        if (levelLoaded) {
+            return;
+        }
 
         this.sprites = AssetPool.getSpritesheet("app/assets/images/spritesheet.png");
 
+        //Object 1
         mario = new  GameObject("Mario", new Transform(new Vector2f(200, 100), new Vector2f(256, 256)), 4);
-        mario.addComponent(new SpriteRenderer(new Sprite(
-            AssetPool.getTexture("app/assets/images/blendImage1.png")
-        )));
+        SpriteRenderer marioSpriteRenderer = new SpriteRenderer();
+        Sprite marioSprite = new Sprite();
+        // marioSpriteRenderer.setColour(new Vector4f(1, 0, 0, 0));
+        marioSprite.setTexture(AssetPool.getTexture("app/assets/images/blendImage1.png"));
+        marioSpriteRenderer.setSprite(marioSprite);
+        mario.addComponent(marioSpriteRenderer);
         this.addGameObjectToScene(mario);
-
-        GameObject goomba = new  GameObject("Goomba", new Transform(new Vector2f(400, 100), new Vector2f(256, 256)), -1);
-        goomba.addComponent(new SpriteRenderer(new Sprite(
-            AssetPool.getTexture("app/assets/images/blendImage2.png")
-        )));
-        this.addGameObjectToScene(goomba);
-
         this.activeGameObject = mario;
+
+        //Object 2
+        GameObject obj2 = new  GameObject("Goomba", new Transform(new Vector2f(400, 100), new Vector2f(256, 256)), -1);
+        SpriteRenderer obj2SpriteRenderer = new SpriteRenderer();
+        Sprite obj2Sprite = new Sprite();
+
+        obj2Sprite.setTexture(AssetPool.getTexture("app/assets/images/blendImage2.png"));
+        obj2SpriteRenderer.setSprite(obj2Sprite);
+        obj2.addComponent(obj2SpriteRenderer);
+        this.addGameObjectToScene(obj2);
+ 
+        // Gson gson = new GsonBuilder()
+        //     .setPrettyPrinting()
+        //     .registerTypeAdapter(Component.class, new DeserializerComponent())
+        //     .registerTypeAdapter(GameObject.class, new GameObjectDeserializer()) // Use custom deserializer
+        //     .create();
+
+        // // System.out.println(gson.toJson("Hello World"));
+        // // System.out.println(gson.toJson(marioSprite));
+        // String serialized = gson.toJson(mario);
+        // System.out.println(serialized);
+        // GameObject mario = gson.fromJson(serialized, GameObject.class);
+        // System.out.println(mario);
     }
 
     /**

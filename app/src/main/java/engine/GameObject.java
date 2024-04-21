@@ -110,6 +110,10 @@ public class GameObject {
         }
     }
 
+
+    /**
+     * Update any changes done to current gameObject through imgui.
+     */
     public void imgui() {
         for (Component c : components) {
             c.imgui();

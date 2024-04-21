@@ -2,7 +2,8 @@ package engine;
 
 public abstract class Component {
 
-    public GameObject gameObject;
+    public transient GameObject gameObject; //Cicular dependency of component and gameObject
+    
 
     public void start(){
         

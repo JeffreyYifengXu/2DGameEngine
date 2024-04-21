@@ -10,23 +10,23 @@ import imgui.ImGui;
 
 public class SpriteRenderer extends Component {
 
-    private Vector4f colour;
-    private Sprite sprite;
+    private Vector4f colour = new Vector4f(1, 1, 1, 1);
+    private Sprite sprite = new Sprite();
 
-    private Transform lastTransform;
-    private boolean isDirty = false;
+    private transient Transform lastTransform;
+    private transient boolean isDirty = false;
 
-    public SpriteRenderer(Vector4f colour) {
-        this.colour = colour;
-        this.sprite = new Sprite(null);
-        this.isDirty = true;
-    }
+    // public SpriteRenderer(Vector4f colour) {
+    //     this.colour = colour;
+    //     this.sprite = new Sprite(null);
+    //     this.isDirty = true;
+    // }
 
-    public SpriteRenderer(Sprite sprite) {
-        this.sprite = sprite;
-        this.colour = new Vector4f(1, 1, 1, 1);
-        this.isDirty = true;
-    }
+    // public SpriteRenderer(Sprite sprite) {
+    //     this.sprite = sprite;
+    //     this.colour = new Vector4f(1, 1, 1, 1);
+    //     this.isDirty = true;
+    // }
 
     @Override
     public void start() {
@@ -41,9 +41,10 @@ public class SpriteRenderer extends Component {
             this.isDirty = true;
         }
     }
-
+ 
     /**
-     * Allows for changing colour using the imgui menu
+     * Allows for real time colour change of selected 
+     * object using the imgui menu
      */
     @Override
     public void imgui() {
