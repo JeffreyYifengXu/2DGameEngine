@@ -4,7 +4,6 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import Renderer.Texture;
-import engine.Component;
 import engine.Transform;
 import imgui.ImGui;
 
@@ -14,19 +13,7 @@ public class SpriteRenderer extends Component {
     private Sprite sprite = new Sprite();
 
     private transient Transform lastTransform;
-    private transient boolean isDirty = false;
-
-    // public SpriteRenderer(Vector4f colour) {
-    //     this.colour = colour;
-    //     this.sprite = new Sprite(null);
-    //     this.isDirty = true;
-    // }
-
-    // public SpriteRenderer(Sprite sprite) {
-    //     this.sprite = sprite;
-    //     this.colour = new Vector4f(1, 1, 1, 1);
-    //     this.isDirty = true;
-    // }
+    private transient boolean isDirty = true;
 
     @Override
     public void start() {
@@ -65,7 +52,7 @@ public class SpriteRenderer extends Component {
     }
 
     public Vector2f[] getTexCoords() {
-        return sprite.gettexCoords();
+        return sprite.getTexCoords();
     }
 
     public void setSprite(Sprite sprite) {
@@ -86,5 +73,12 @@ public class SpriteRenderer extends Component {
 
     public void setClean() {
         this.isDirty = false;
+    }
+
+    /**
+     * Debug function
+     */
+    public Sprite getSprite() {
+        return this.sprite;
     }
 }

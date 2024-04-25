@@ -16,6 +16,7 @@ import imgui.flag.ImGuiKey;
 import imgui.flag.ImGuiMouseCursor;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
+import scenes.Scene;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -38,11 +39,13 @@ public class ImGuiLayer {
     }
 
     public void init() {
-        System.out.println("Initializing ImGui");
+        System.out.println("Initializing ImGui...");
         initImGui();
-        System.out.println("Initizlizing imGuiglfw");
+        System.out.println("Successfully initialized imgui\n");
+        System.out.println("Initizlizing imGuiglfw...");
         imGuiGlfw.init(this.glfwWindow, true);
         imGuiGl3.init(glslVersion);
+        System.out.println("Successfully initialized imGuiglfw and imGuiGl3\n");
     }
 
     public void destroy() {
@@ -61,7 +64,7 @@ public class ImGuiLayer {
         // Code goes between newFrame and render
         ImGui.newFrame();
         currentScene.sceneimgui();
-        ImGui.showDemoWindow();
+        // ImGui.showDemoWindow();
         ImGui.render();
 
         //end of frame
@@ -183,17 +186,13 @@ public class ImGuiLayer {
             }
         });
 
-        // ------------------------------------------------------------
-        // Fonts configuration
-        // Read: https://raw.githubusercontent.com/ocornut/imgui/master/docs/FONTS.txt
-
        final ImFontAtlas fontAtlas = io.getFonts(); // Spritesheet that contains all alphanumeric characters.
        final ImFontConfig fontConfig = new ImFontConfig(); // Natively allocated object
 
        fontConfig.setGlyphRanges(fontAtlas.getGlyphRangesDefault());//Set what type of characters is wanted (chinese, alphabet etc)
 
        fontConfig.setPixelSnapH(true);
-       fontAtlas.addFontFromFileTTF("app/assets/fonts/BAUHS93.ttf", 32, fontConfig);
+       fontAtlas.addFontFromFileTTF("app/assets/fonts/BAUHS93.ttf", 16, fontConfig);
  
 
        fontConfig.destroy(); // After all fonts were added we don't need this config more

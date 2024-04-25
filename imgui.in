@@ -4,17 +4,17 @@ Size=400,400
 Collapsed=0
 
 [Window][test window]
-Pos=60,60
-Size=194,86
+Pos=1357,230
+Size=422,339
 Collapsed=0
 
 [Window][Dear ImGui Demo]
-Pos=650,20
+Pos=1290,172
 Size=550,680
-Collapsed=0
+Collapsed=1
 
 [Window][Inspector]
-Pos=60,60
-Size=290,292
+Pos=78,-2
+Size=456,499
 Collapsed=0
 

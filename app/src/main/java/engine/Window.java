@@ -1,13 +1,14 @@
 package engine;
 
 import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
-import static org.lwjgl.glfw.GLFW.GLFW_MAXIMIZED;
+// import static org.lwjgl.glfw.GLFW.GLFW_MAXIMIZED;
 import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
 import static org.lwjgl.glfw.GLFW.GLFW_TRUE;
 import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
 import static org.lwjgl.glfw.GLFW.glfwDefaultWindowHints;
 import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
+import static org.lwjgl.glfw.GLFW.glfwGetTime;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
@@ -38,8 +39,9 @@ import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
-import util.Time;
-
+import scenes.LevelEditorScene;
+import scenes.LevelScene;
+import scenes.Scene;
 
 /**
  * Manages the window for the game
@@ -77,18 +79,19 @@ public class Window {
         switch (newScene) {
             case 0:
                 currentScene = new LevelEditorScene();
-                currentScene.init(); 
-                currentScene.start();
                 break;
             case 1:
                 currentScene = new LevelScene();
-                currentScene.init();
-                currentScene.start();
                 break;
             default:
                 assert false : "unknow scene '" + newScene + "'";
                 break;
         }
+        
+        
+        currentScene.load(); //load current level
+        currentScene.init(); 
+        currentScene.start();
     }
 
     /**
@@ -115,6 +118,7 @@ public class Window {
     @SuppressWarnings("null")
     public void run() {
         System.out.println("Hello LWJGL" + Version.getVersion() + "!");
+        System.out.println("######################################\n");
 
         init();
         loop();
@@ -133,8 +137,6 @@ public class Window {
      */
     public void init() {
         // Setup an error callback
-        System.out.println("Window is created in Window.init()");
-
         GLFWErrorCallback.createPrint(System.err).set();
 
         //Initialize GLFW
@@ -146,7 +148,7 @@ public class Window {
         // int widthMM, heightMM;
         // glfwGetMonitorPhysicalSize(, widthMM, heightMM);
 
-        //Configure GLFW
+        //Configure GLFW: Set window to be invisible, allow resize, maximize window set to false
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
@@ -194,11 +196,10 @@ public class Window {
      */
     public void loop() {
         //setup delta time variable
-        float beginTime = Time.getTime();
-        float endTime = Time .getTime();
+        float beginTime = (float)glfwGetTime();
+        float endTime;;
         float dt = -1.0f;
 
-        currentScene.load(); //load current level
         //Main loop
         while (!glfwWindowShouldClose(glfwWindow)) {
             //Poll events
@@ -207,7 +208,7 @@ public class Window {
             glClearColor(r, g, b, a);
             glClear(GL_COLOR_BUFFER_BIT);
 
-            if (dt >= 0){// Ensure no update is done during the first iteration
+            if (dt > 0){// Ensure no update is done during the first iteration
                 currentScene.update(dt);
 
                 //imgui stuff
@@ -216,7 +217,7 @@ public class Window {
 
             glfwSwapBuffers(glfwWindow);
 
-            endTime = Time.getTime();
+            endTime = (float)glfwGetTime();
             dt = endTime - beginTime;
             beginTime = endTime;
         }

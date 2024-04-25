@@ -1,5 +1,6 @@
-package engine;
+package scenes;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,6 +12,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import Renderer.Renderer;
+import components.Component;
+import components.DeserializerComponent;
+import engine.Camera;
+import engine.GameObject;
+import engine.GameObjectDeserializer;
 import imgui.ImGui;
 
 
@@ -19,7 +25,7 @@ public abstract class Scene {
 
     protected Renderer renderer = new Renderer();
     protected Camera camera;
-    private boolean isRunning = false;
+    private boolean isRunning = false; 
     protected List<GameObject> gameObjects = new ArrayList<>();
     protected GameObject activeGameObject = null;
     protected boolean levelLoaded = false;
@@ -99,13 +105,22 @@ public abstract class Scene {
     public void load() {
         Gson gson = new GsonBuilder()
             .setPrettyPrinting()
-            .registerTypeAdapter(Component.class, new DeserializerComponent())
-            .registerTypeAdapter(GameObject.class, new GameObjectDeserializer()) // Use custom deserializer
+            .registerTypeAdapter(Component.class, new DeserializerComponent()) //Use custom deserializer for component
+            .registerTypeAdapter(GameObject.class, new GameObjectDeserializer()) // Use custom deserializer for gameobject
             .create();
         
         String inFile = "";
+
+        //check if its the first time loading up the game
+        File f = new File("level.txt");
+        if (f.length() == 0) {
+            System.out.println("Level not loaded, because level.txt is empty");
+            this.levelLoaded = false;
+            return;
+        }
+
         try {
-            inFile = new String(Files.readAllBytes(Paths.get("level.txt")));
+            inFile = new String(Files.readAllBytes(Paths.get("level.txt"))); //Read in savec file in json format
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -113,11 +128,14 @@ public abstract class Scene {
         if (!inFile.equals("")) {
             GameObject[] objs = gson.fromJson(inFile, GameObject[].class);
             for (int i=0; i < objs.length; i++) {
+                System.out.println("GameObjects loaded: " + objs[i].getName());
+
                 addGameObjectToScene(objs[i]);
             }
         }
 
         this.levelLoaded = true;
+        System.out.println("Level successfully loaded");
     }
 }
 

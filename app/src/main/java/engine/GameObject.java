@@ -3,6 +3,9 @@ package engine;
 import java.util.ArrayList;
 import java.util.List;
 
+import components.Component;
+import components.SpriteRenderer;
+
 /**
  * Represents an in game object. 
  * @author Jeffrey, referencing GmaesWithGabe
@@ -110,17 +113,26 @@ public class GameObject {
         }
     }
 
-
     /**
      * Update any changes done to current gameObject through imgui.
      */
     public void imgui() {
         for (Component c : components) {
-            c.imgui();
+            c.imgui(); //Exposes the components variables to the user through imgui
         }
     }
 
     public int zIndex() {
         return this.zIndex;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void getProperties() {
+        System.out.println("name: " + this.name);
+        System.out.println("zIndex: " + this.zIndex);
+        System.out.println("Position: " + this.transform.position);
     }
 }

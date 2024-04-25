@@ -131,6 +131,10 @@ public class RenderBatch implements Comparable<RenderBatch>{
         }
     }
 
+    /**
+     * Render the available game sprites
+     * Only rebuffer when something is changed on the screen (i.e. marked by dirty flag)
+     */
     public void render() {
         boolean rebufferData = false;
         for (int i=0; i < numSprites; i++) {

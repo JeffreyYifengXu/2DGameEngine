@@ -1,6 +1,67 @@
 [
   {
-    "name": "Mario",
+    "name": "Object 1",
+    "components": [
+      {
+        "type": "components.SpriteRenderer",
+        "properties": {
+          "colour": {
+            "x": 0.27287558,
+            "y": 0.26807258,
+            "z": 0.59107804,
+            "w": 1.0
+          },
+          "sprite": {
+            "texCoords": [
+              {
+                "x": 1.0,
+                "y": 1.0
+              },
+              {
+                "x": 1.0,
+                "y": 0.0
+              },
+              {
+                "x": 0.0,
+                "y": 0.0
+              },
+              {
+                "x": 0.0,
+                "y": 1.0
+              }
+            ],
+            "width": 0.0,
+            "height": 0.0
+          }
+        }
+      },
+      {
+        "type": "components.Rigidbody",
+        "properties": {
+          "colliferType": 0,
+          "friction": 0.8,
+          "velocity": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
+        }
+      }
+    ],
+    "zIndex": 2,
+    "transform": {
+      "position": {
+        "x": 200.0,
+        "y": 100.0
+      },
+      "scale": {
+        "x": 256.0,
+        "y": 256.0
+      }
+    }
+  },
+  {
+    "name": "Object 2",
     "components": [
       {
         "type": "components.SpriteRenderer",
@@ -13,7 +74,7 @@
           },
           "sprite": {
             "texture": {
-              "filepath": "app/assets/images/blendImage1.png",
+              "filepath": "app/assets/images/blendImage2.png",
               "texID": 3,
               "width": 256,
               "height": 256
@@ -35,277 +96,14 @@
                 "x": 0.0,
                 "y": 1.0
               }
-            ]
+            ],
+            "width": 0.0,
+            "height": 0.0
           }
         }
       }
     ],
-    "zIndex": 4,
-    "transform": {
-      "position": {
-        "x": 200.0,
-        "y": 100.0
-      },
-      "scale": {
-        "x": 256.0,
-        "y": 256.0
-      }
-    }
-  },
-  {
-    "name": "Goomba",
-    "components": [
-      {
-        "type": "components.SpriteRenderer",
-        "properties": {
-          "colour": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0,
-            "w": 1.0
-          },
-          "sprite": {
-            "texture": {
-              "filepath": "app/assets/images/blendImage2.png",
-              "texID": 4,
-              "width": 256,
-              "height": 256
-            },
-            "texCoords": [
-              {
-                "x": 1.0,
-                "y": 1.0
-              },
-              {
-                "x": 1.0,
-                "y": 0.0
-              },
-              {
-                "x": 0.0,
-                "y": 0.0
-              },
-              {
-                "x": 0.0,
-                "y": 1.0
-              }
-            ]
-          }
-        }
-      }
-    ],
-    "zIndex": -1,
-    "transform": {
-      "position": {
-        "x": 400.0,
-        "y": 100.0
-      },
-      "scale": {
-        "x": 256.0,
-        "y": 256.0
-      }
-    }
-  },
-  {
-    "name": "Mario",
-    "components": [
-      {
-        "type": "components.SpriteRenderer",
-        "properties": {
-          "colour": {
-            "x": 0.12413794,
-            "y": 0.12413794,
-            "z": 0.12413794,
-            "w": 1.0
-          },
-          "sprite": {
-            "texture": {
-              "filepath": "app/assets/images/blendImage1.png",
-              "texID": 3,
-              "width": 256,
-              "height": 256
-            },
-            "texCoords": [
-              {
-                "x": 1.0,
-                "y": 1.0
-              },
-              {
-                "x": 1.0,
-                "y": 0.0
-              },
-              {
-                "x": 0.0,
-                "y": 0.0
-              },
-              {
-                "x": 0.0,
-                "y": 1.0
-              }
-            ]
-          }
-        }
-      }
-    ],
-    "zIndex": 4,
-    "transform": {
-      "position": {
-        "x": 200.0,
-        "y": 100.0
-      },
-      "scale": {
-        "x": 256.0,
-        "y": 256.0
-      }
-    }
-  },
-  {
-    "name": "Goomba",
-    "components": [
-      {
-        "type": "components.SpriteRenderer",
-        "properties": {
-          "colour": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0,
-            "w": 1.0
-          },
-          "sprite": {
-            "texture": {
-              "filepath": "app/assets/images/blendImage2.png",
-              "texID": 4,
-              "width": 256,
-              "height": 256
-            },
-            "texCoords": [
-              {
-                "x": 1.0,
-                "y": 1.0
-              },
-              {
-                "x": 1.0,
-                "y": 0.0
-              },
-              {
-                "x": 0.0,
-                "y": 0.0
-              },
-              {
-                "x": 0.0,
-                "y": 1.0
-              }
-            ]
-          }
-        }
-      }
-    ],
-    "zIndex": -1,
-    "transform": {
-      "position": {
-        "x": 400.0,
-        "y": 100.0
-      },
-      "scale": {
-        "x": 256.0,
-        "y": 256.0
-      }
-    }
-  },
-  {
-    "name": "Mario",
-    "components": [
-      {
-        "type": "components.SpriteRenderer",
-        "properties": {
-          "colour": {
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0,
-            "w": 1.0
-          },
-          "sprite": {
-            "texture": {
-              "filepath": "app/assets/images/blendImage1.png",
-              "texID": 3,
-              "width": 256,
-              "height": 256
-            },
-            "texCoords": [
-              {
-                "x": 1.0,
-                "y": 1.0
-              },
-              {
-                "x": 1.0,
-                "y": 0.0
-              },
-              {
-                "x": 0.0,
-                "y": 0.0
-              },
-              {
-                "x": 0.0,
-                "y": 1.0
-              }
-            ]
-          }
-        }
-      }
-    ],
-    "zIndex": 4,
-    "transform": {
-      "position": {
-        "x": 200.0,
-        "y": 100.0
-      },
-      "scale": {
-        "x": 256.0,
-        "y": 256.0
-      }
-    }
-  },
-  {
-    "name": "Goomba",
-    "components": [
-      {
-        "type": "components.SpriteRenderer",
-        "properties": {
-          "colour": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0,
-            "w": 1.0
-          },
-          "sprite": {
-            "texture": {
-              "filepath": "app/assets/images/blendImage2.png",
-              "texID": 4,
-              "width": 256,
-              "height": 256
-            },
-            "texCoords": [
-              {
-                "x": 1.0,
-                "y": 1.0
-              },
-              {
-                "x": 1.0,
-                "y": 0.0
-              },
-              {
-                "x": 0.0,
-                "y": 0.0
-              },
-              {
-                "x": 0.0,
-                "y": 1.0
-              }
-            ]
-          }
-        }
-      }
-    ],
-    "zIndex": -1,
+    "zIndex": 3,
     "transform": {
       "position": {
         "x": 400.0,

@@ -1,4 +1,4 @@
-package engine;
+package components;
 
 import com.google.gson.JsonSerializer;
 
@@ -14,15 +14,19 @@ import com.google.gson.JsonSerializationContext;
 
 public class DeserializerComponent implements JsonSerializer<Component>, 
     JsonDeserializer<Component>{
-
+    
+    /**
+     * Custom deserializer for the component class.
+     * Can properly deserialize different types of components
+     */
     @Override
     public Component deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
         JsonObject jsonObject = json.getAsJsonObject();
-        String type = jsonObject.get("type").getAsString();
-        JsonElement element = jsonObject.get("properties");
+        String type = jsonObject.get("type").getAsString(); //Obtain the type of the stored object
+        JsonElement element = jsonObject.get("properties"); //Obtain the properties of the stored object
 
         try{
-            return context.deserialize(element, Class.forName(type)); 
+            return context.deserialize(element, Class.forName(type)); //Deserialize according to the type of object
         } catch (ClassNotFoundException e) {
             throw new JsonParseException("Unknown element type: " + type, e);
         }

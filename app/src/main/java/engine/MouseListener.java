@@ -3,6 +3,8 @@ package engine;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
+import org.joml.Vector4f;
+
 /**
  * Manage and process all mouse input
  * @author Jeffrey Xu, referencing GameWithGabe
@@ -97,6 +99,32 @@ public class MouseListener {
 
     public static float getY() {
         return (float)get().y;
+    }
+
+    public static float getOrthoX() {
+        float currentX = getX();
+        currentX = (currentX / (float)Window.getWidth()) * 2.0f - 1.0f;
+
+        Vector4f tmp = new Vector4f(currentX, 0, 0, 1); //Need vector4f to do matrix multiplication with another vector4f
+
+        //Convert screenn coords to world coords
+        tmp.mul(Window.getScene().camera().getInverseProjection()).
+            mul(Window.getScene().camera().getInverseView());
+        
+        return -1;
+    }
+
+    public static float getOrthoY() {
+        float currentY = getY();
+        currentY = (currentY / (float)Window.getHeight());
+
+        Vector4f tmp = new Vector4f(0, currentY, 0, 1); //Need vector4f to do matrix multiplication with another vector4f
+
+        //Convert screenn coords to world coords
+        tmp.mul(Window.getScene().camera().getInverseProjection()).
+            mul(Window.getScene().camera().getInverseView());
+        return -1;
+
     }
 
     public static float getDx() {
