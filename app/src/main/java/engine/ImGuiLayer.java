@@ -138,6 +138,10 @@ public class ImGuiLayer {
             io.setKeyShift(io.getKeysDown(GLFW_KEY_LEFT_SHIFT) || io.getKeysDown(GLFW_KEY_RIGHT_SHIFT));
             io.setKeyAlt(io.getKeysDown(GLFW_KEY_LEFT_ALT) || io.getKeysDown(GLFW_KEY_RIGHT_ALT));
             io.setKeySuper(io.getKeysDown(GLFW_KEY_LEFT_SUPER) || io.getKeysDown(GLFW_KEY_RIGHT_SUPER));
+
+            if (!io.getWantCaptureKeyboard()) {
+                KeyListener.KeyCallback(w, key, scancode, action, mods);
+            }
         });
 
         glfwSetCharCallback(glfwWindow, (w, c) -> {
@@ -159,6 +163,11 @@ public class ImGuiLayer {
 
             if (!io.getWantCaptureMouse() && mouseDown[1]) {
                 ImGui.setWindowFocus(null);
+            }
+
+            //If glfw is not using the mouse, pass the call back to the custom MouseListener call back function.
+            if (!io.getWantCaptureMouse()) {
+                MouseListener.mouseButtonCallback(w, button, action, mods);
             }
         });
 
@@ -192,7 +201,7 @@ public class ImGuiLayer {
        fontConfig.setGlyphRanges(fontAtlas.getGlyphRangesDefault());//Set what type of characters is wanted (chinese, alphabet etc)
 
        fontConfig.setPixelSnapH(true);
-       fontAtlas.addFontFromFileTTF("app/assets/fonts/BAUHS93.ttf", 16, fontConfig);
+       fontAtlas.addFontFromFileTTF("app/assets/fonts/BAUHS93.ttf", 22, fontConfig);
  
 
        fontConfig.destroy(); // After all fonts were added we don't need this config more

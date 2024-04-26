@@ -151,14 +151,14 @@ public class LevelEditorScene extends Scene{
         float windowX2 = windowPos.x + windowSize.x;
         for (int i=0; i < sprites.size(); i++) { //Loop through all sprites read in from sprite sheets
             Sprite sprite = sprites.getSprite(i);
-            float spriteWidth = sprite.getWidth(); //Multipling by a number to adjust the size of the icons
-            float spriteHeight = sprite.getHeight();
+            float spriteWidth = sprite.getWidth() * 2; //Multipling by a number to adjust the size of the icons
+            float spriteHeight = sprite.getHeight() * 2;
             
             int id = sprite.getTexId();
             Vector2f[] texCoords = sprite.getTexCoords();
 
             ImGui.pushID(i); //Assign a different id for each sprite
-            if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[0].x, texCoords[0].y, texCoords[2].x, texCoords[2].y)) {
+            if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x, texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
                 GameObject obj = Prefab.generateSpriteObject(sprite, spriteWidth, spriteHeight);
                 mouseControls.pickupObject(obj);
             }

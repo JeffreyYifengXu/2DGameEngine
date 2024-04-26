@@ -21,8 +21,8 @@ public class MouseControls extends Component{
     @Override
     public void update(float dt) {
         if (holdingObject != null) {
-            holdingObject.transform.position.x = MouseListener.getOrthoX() - 16;
-            holdingObject.transform.position.x = MouseListener.getOrthoY() - 16;
+            holdingObject.transform.position.x = MouseListener.getOrthoX(); 
+            holdingObject.transform.position.y = MouseListener.getOrthoY();
 
             if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT)) {
                 place();

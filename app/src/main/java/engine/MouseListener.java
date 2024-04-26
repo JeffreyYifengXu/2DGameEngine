@@ -13,7 +13,7 @@ public class MouseListener {
     private static MouseListener instance;
     private double scrollX, scrollY;
     private double x, y, lastY, lastX;
-    private boolean mouseButtonPressed[] = new boolean[3];
+    private boolean mouseButtonPressed[] = new boolean[9];
     private boolean isDragging;
 
     private MouseListener() {
@@ -110,20 +110,23 @@ public class MouseListener {
         //Convert screenn coords to world coords
         tmp.mul(Window.getScene().camera().getInverseProjection()).
             mul(Window.getScene().camera().getInverseView());
+        currentX = tmp.x;
         
-        return -1;
+        return currentX;
     }
 
     public static float getOrthoY() {
-        float currentY = getY();
-        currentY = (currentY / (float)Window.getHeight());
+        float currentY = Window.getHeight() - getY(); //Y coordinates are flipped in opengl
+        currentY = (currentY / (float)Window.getHeight()) * 2.0f - 1.0f;
 
         Vector4f tmp = new Vector4f(0, currentY, 0, 1); //Need vector4f to do matrix multiplication with another vector4f
 
         //Convert screenn coords to world coords
         tmp.mul(Window.getScene().camera().getInverseProjection()).
             mul(Window.getScene().camera().getInverseView());
-        return -1;
+        currentY = tmp.y;
+        
+        return currentY  ;
 
     }
 
