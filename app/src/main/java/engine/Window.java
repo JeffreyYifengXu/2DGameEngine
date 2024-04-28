@@ -39,6 +39,7 @@ import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
+import Renderer.DebugDraw;
 import scenes.LevelEditorScene;
 import scenes.LevelScene;
 import scenes.Scene;
@@ -205,10 +206,15 @@ public class Window {
             //Poll events
             glfwPollEvents();
 
+            //Draw the debug lines
+            DebugDraw.beginFrame();
+
             glClearColor(r, g, b, a);
             glClear(GL_COLOR_BUFFER_BIT);
 
             if (dt > 0){// Ensure no update is done during the first iteration
+                
+                DebugDraw.draw();
                 currentScene.update(dt);
 
                 //imgui stuff

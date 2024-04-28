@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import components.Component;
-import components.SpriteRenderer;
 
 /**
  * Represents an in game object. 
@@ -12,24 +11,15 @@ import components.SpriteRenderer;
  */
 
 public class GameObject {
+    private static int ID_COUNTER = 0;
+    private int uid = -1;
+
 
     private String name;
     private List<Component> components;
     private int zIndex;
 
     public Transform transform;
-
-    /**
-     * Initializes the gameobject
-     * Sets the name and initialize new array for components and transform
-     * @param name
-     */
-    public GameObject(String name) {
-        this.name = name;
-        this.components = new ArrayList<>();
-        this.transform = new Transform();
-        this.zIndex = 0;
-    }
 
     /**
      * Initializes the gameobject
@@ -41,6 +31,8 @@ public class GameObject {
         this.components = new ArrayList<>();
         this.transform = transform;
         this.zIndex = zIndex;
+
+        this.uid = ID_COUNTER++;
     }
 
     /**
@@ -90,6 +82,7 @@ public class GameObject {
      */
 
     public void addComponent(Component c) {
+        c.generateId(); //generate id for the object
         this.components.add(c);
         c.gameObject = this;
     }
@@ -134,5 +127,17 @@ public class GameObject {
         System.out.println("name: " + this.name);
         System.out.println("zIndex: " + this.zIndex);
         System.out.println("Position: " + this.transform.position);
+    }
+
+    public static void init(int maxId) {
+        ID_COUNTER = maxId;
+    }
+
+    public int getUid() {
+        return this.uid;
+    }
+
+    public List<Component> getAllComponent() {
+        return this.components;
     }
 }

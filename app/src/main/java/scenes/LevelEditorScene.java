@@ -1,8 +1,10 @@
 package scenes;
 
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import Renderer.DebugDraw;
 import components.MouseControls;
 import components.Rigidbody;
 import components.Sprite;
@@ -47,7 +49,9 @@ public class LevelEditorScene extends Scene{
         loadResources();
         this.camera = new Camera(new Vector2f(-250, 0));
         this.sprites = AssetPool.getSpritesheet("app/assets/images/spritesheets/decorationsAndBlocks.png");
-
+         //Initiate debug line functionalities
+         DebugDraw.addLine2D(new Vector2f(0, 0), new Vector2f(800, 800), new Vector3f(1, 0, 0), 120);
+         
         if (levelLoaded) {
             System.out.println("Level is loaded, current active game object is: ");
             this.activeGameObject = gameObjects.get(0);

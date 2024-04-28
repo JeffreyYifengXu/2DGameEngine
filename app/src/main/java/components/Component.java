@@ -2,7 +2,6 @@ package components;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Vector;
 
 import org.joml.Vector3f;
 
@@ -10,6 +9,8 @@ import engine.GameObject;
 import imgui.ImGui;
 
 public abstract class Component {
+    private static int ID_COUNTER = 0; //Associate with component class in general, global
+    private int uid = -1;
 
     public transient GameObject gameObject; //Cicular dependency of component and gameObject
     
@@ -65,5 +66,26 @@ public abstract class Component {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Ensure each component gets an unique id
+     */
+    public void generateId() {
+        if (this.uid == -1) {
+            this.uid = ID_COUNTER++;
+        }
+    }
+
+    public int getUid() {
+        return this.uid;
+    }
+
+    /**
+     * Make sure that no components gets duplicate id after loading a level
+     * @param maxId
+     */
+    public static void init(int maxId) {
+        ID_COUNTER = maxId;
     }
 }
