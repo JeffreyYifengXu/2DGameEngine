@@ -60,7 +60,6 @@ public class DebugDraw {
         glVertexAttribPointer(1, 3, GL_FLOAT, false, 6 * Float.BYTES, 3 * Float.BYTES);
         glEnableVertexAttribArray(1);
 
-        //TODO: SET LINE WIDTH
         glLineWidth(2.0f);
     }
 
@@ -121,7 +120,7 @@ public class DebugDraw {
         glEnableVertexAttribArray(1);
 
         //Drawthe batch 
-        glDrawArrays(GL_LINES, 0, lines.size() * 6 * 2);
+        glDrawArrays(GL_LINES, 0, lines.size() * 2);
 
         //Disable Location
         glDisableVertexAttribArray(0);

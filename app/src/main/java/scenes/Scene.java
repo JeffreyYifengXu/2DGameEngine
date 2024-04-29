@@ -29,6 +29,8 @@ public abstract class Scene {
     protected List<GameObject> gameObjects = new ArrayList<>();
     protected GameObject activeGameObject = null;
     protected boolean levelLoaded = false;
+
+    protected boolean madeChanges = false;
     
     public Scene() {
 
@@ -51,6 +53,7 @@ public abstract class Scene {
     }
 
     public void addGameObjectToScene(GameObject go) {
+        madeChanges = true;
         if (!isRunning) {
             gameObjects.add(go);
         } else {
@@ -91,9 +94,12 @@ public abstract class Scene {
             .create();
         
         try {
-            FileWriter writer = new FileWriter("level.txt");
-            writer.write(gson.toJson(this.gameObjects));
-            writer.close();
+            //Don't save if no changes were made
+            if (madeChanges) {
+                FileWriter writer = new FileWriter("level.txt");
+                writer.write(gson.toJson(this.gameObjects));
+                writer.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

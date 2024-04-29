@@ -4,8 +4,8 @@ Size=400,400
 Collapsed=0
 
 [Window][test window]
-Pos=1008,307
-Size=762,292
+Pos=870,391
+Size=832,440
 Collapsed=0
 
 [Window][Dear ImGui Demo]
@@ -14,7 +14,7 @@ Size=550,680
 Collapsed=1
 
 [Window][Inspector]
-Pos=78,47
+Pos=29,95
 Size=456,499
 Collapsed=0
 

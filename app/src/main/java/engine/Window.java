@@ -53,7 +53,7 @@ public class Window {
     
     private long glfwWindow;
     private ImGuiLayer imguiLayer;
-
+    
     public float r, g, b, a;
 
     private static Window window = null;
@@ -217,7 +217,9 @@ public class Window {
                 DebugDraw.draw();
                 currentScene.update(dt);
 
-                //imgui stuff
+                //Imgui studd
+                //Displays active gameobject variables through imgui window
+                //TODO: Fix bug where random lines occur
                 this.imguiLayer.update(dt, currentScene);
             }
 
@@ -229,6 +231,7 @@ public class Window {
         }
 
         currentScene.saveExit(); //Save current progress
+        this.imguiLayer.destroy();
     }
 
     public static int getWidth() {

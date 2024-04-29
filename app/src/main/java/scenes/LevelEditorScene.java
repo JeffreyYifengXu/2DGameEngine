@@ -5,6 +5,7 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import Renderer.DebugDraw;
+import components.GridLines;
 import components.MouseControls;
 import components.Rigidbody;
 import components.Sprite;
@@ -17,6 +18,7 @@ import engine.Transform;
 import imgui.ImGui;
 import imgui.ImVec2;
 import util.AssetPool;
+import util.Settings;
 
 /**
  * Allows admin to edit the levels of the game, contains the main update loop of the game
@@ -32,7 +34,7 @@ public class LevelEditorScene extends Scene{
     private GameObject obj1;
     private SpriteRenderer obj1Sprite;
 
-    MouseControls mouseControls = new MouseControls();
+    GameObject levelEditorUtil = new GameObject("LevelEditor", new Transform(new Vector2f()), 0);
 
     public LevelEditorScene() {
 
@@ -46,58 +48,38 @@ public class LevelEditorScene extends Scene{
      */
     @Override
     public void init() {
+        levelEditorUtil.addComponent(new MouseControls());
+        levelEditorUtil.addComponent(new GridLines());
+
         loadResources();
         this.camera = new Camera(new Vector2f(-250, 0));
-        this.sprites = AssetPool.getSpritesheet("app/assets/images/spritesheets/decorationsAndBlocks.png");
-         //Initiate debug line functionalities
-         DebugDraw.addLine2D(new Vector2f(0, 0), new Vector2f(800, 800), new Vector3f(1, 0, 0), 120);
-         
+        this.sprites = AssetPool.getSpritesheet("app/assets/images/spritesheets/tilemap.png");
+        // this.sprites = AssetPool.getSpritesheet("app/assets/images/spritesheets/decorationsAndBlocks.png");
+
+        
         if (levelLoaded) {
-            System.out.println("Level is loaded, current active game object is: ");
-            this.activeGameObject = gameObjects.get(0);
-            System.out.println(this.activeGameObject.getName());
-            this.activeGameObject.getProperties();
+            this.activeGameObject = gameObjects.get(2);
             return;
         }
 
-        // //Object 1
-        // mario = new GameObject("Mario", new Transform(new Vector2f(200, 100), new Vector2f(256, 256)), 4);
-        // SpriteRenderer marioSpriteRenderer = new SpriteRenderer();
-        // Sprite marioSprite = new Sprite();
 
-        // marioSprite.setTexture(AssetPool.getTexture("app/assets/images/blendImage1.png"));
-        // marioSpriteRenderer.setSprite(marioSprite);
-        // mario.addComponent(marioSpriteRenderer);
-        // mario.addComponent(new Rigidbody());
-        // this.addGameObjectToScene(mario);
+        // obj1 = new GameObject("Object 1", new Transform(new Vector2f(200, 100),
+        //         new Vector2f(256, 256)), 2);
+        // obj1Sprite = new SpriteRenderer();
+        // obj1Sprite.setColour(new Vector4f(1, 1, 0, 1));
+        // obj1.addComponent(obj1Sprite);
+        // obj1.addComponent(new Rigidbody());
+        // this.addGameObjectToScene(obj1);
+        // this.activeGameObject = obj1;
 
-        // //Object 2
-        // GameObject obj2 = new  GameObject("Goomba", new Transform(new Vector2f(400, 100), new Vector2f(256, 256)), -1);
+        // GameObject obj2 = new GameObject("Object 2",
+        //         new Transform(new Vector2f(400, 100), new Vector2f(256, 256)), 3);
         // SpriteRenderer obj2SpriteRenderer = new SpriteRenderer();
         // Sprite obj2Sprite = new Sprite();
-
         // obj2Sprite.setTexture(AssetPool.getTexture("app/assets/images/blendImage2.png"));
         // obj2SpriteRenderer.setSprite(obj2Sprite);
         // obj2.addComponent(obj2SpriteRenderer);
         // this.addGameObjectToScene(obj2);
-
-        obj1 = new GameObject("Object 1", new Transform(new Vector2f(200, 100),
-                new Vector2f(256, 256)), 2);
-        obj1Sprite = new SpriteRenderer();
-        obj1Sprite.setColour(new Vector4f(1, 1, 0, 1));
-        obj1.addComponent(obj1Sprite);
-        obj1.addComponent(new Rigidbody());
-        this.addGameObjectToScene(obj1);
-        this.activeGameObject = obj1;
-
-        GameObject obj2 = new GameObject("Object 2",
-                new Transform(new Vector2f(400, 100), new Vector2f(256, 256)), 3);
-        SpriteRenderer obj2SpriteRenderer = new SpriteRenderer();
-        Sprite obj2Sprite = new Sprite();
-        obj2Sprite.setTexture(AssetPool.getTexture("app/assets/images/blendImage2.png"));
-        obj2SpriteRenderer.setSprite(obj2Sprite);
-        obj2.addComponent(obj2SpriteRenderer);
-        this.addGameObjectToScene(obj2);
     }
 
     /**
@@ -113,12 +95,17 @@ public class LevelEditorScene extends Scene{
 
         System.out.println("Loading spritesheets...");
         //Load spritesheets, and create new spritesheet object
-        AssetPool.addSpritesheet("app/assets/images/spritesheets/decorationsAndBlocks.png", 
-                new Spritesheet(AssetPool.getTexture("app/assets/images/spritesheets/decorationsAndBlocks.png"),
-                16, 16, 81, 0));
-        System.out.println("SpriteSheets successfully loaded\n");
+        //Mario spritesheet
+        // AssetPool.addSpritesheet("app/assets/images/spritesheets/decorationsAndBlocks.png", 
+        //         new Spritesheet(AssetPool.getTexture("app/assets/images/spritesheets/decorationsAndBlocks.png"),
+        //         16, 16, 81, 0));
 
-        AssetPool.getTexture("app/assets/images/blendImage2.png");
+        //Platform game sprite sheet
+        AssetPool.addSpritesheet("app/assets/images/spritesheets/tilemap.png", 
+            new Spritesheet(AssetPool.getTexture("app/assets/images/spritesheets/tilemap.png"),
+            18, 18, 180, 0));
+
+        System.out.println("SpriteSheets successfully loaded\n");
     }
 
     /**
@@ -127,7 +114,7 @@ public class LevelEditorScene extends Scene{
      */
     @Override
     public void update(float dt) {
-        mouseControls.update(dt);
+        levelEditorUtil.update(dt);
 
         //Currently no updates done to gameobjects
         for (GameObject go: this.gameObjects) {
@@ -162,9 +149,10 @@ public class LevelEditorScene extends Scene{
             Vector2f[] texCoords = sprite.getTexCoords();
 
             ImGui.pushID(i); //Assign a different id for each sprite
+            //When mouse button is clicked onto a block icon
             if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x, texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
-                GameObject obj = Prefab.generateSpriteObject(sprite, spriteWidth, spriteHeight);
-                mouseControls.pickupObject(obj);
+                GameObject obj = Prefab.generateSpriteObject(sprite, Settings.GRID_HEIGHT, Settings.GRID_WIDTH);
+                levelEditorUtil.getComponent(MouseControls.class).pickupObject(obj);
             }
             ImGui.popID();
 
