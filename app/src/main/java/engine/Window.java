@@ -27,6 +27,7 @@ import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_ONE;
@@ -40,6 +41,7 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
 import Renderer.DebugDraw;
+import Renderer.Framebuffer;
 import scenes.LevelEditorScene;
 import scenes.LevelScene;
 import scenes.Scene;
@@ -53,6 +55,7 @@ public class Window {
     
     private long glfwWindow;
     private ImGuiLayer imguiLayer;
+    private Framebuffer framebuffer;
     
     public float r, g, b, a;
 
@@ -188,6 +191,10 @@ public class Window {
         imguiLayer = new ImGuiLayer(glfwWindow);
         imguiLayer.init();
 
+        //Initialize framebuffer object
+        this.framebuffer = new Framebuffer(1920, 1080);
+        glViewport(0, 0, 1920, 1080);
+
         Window.changeScene(0);
     }
 
@@ -209,6 +216,9 @@ public class Window {
             //Draw the debug lines
             DebugDraw.beginFrame();
 
+            //bind frambuffer, allowing rendering offscreen
+            this.framebuffer.bind();
+            
             glClearColor(r, g, b, a);
             glClear(GL_COLOR_BUFFER_BIT);
 
@@ -216,12 +226,14 @@ public class Window {
                 
                 DebugDraw.draw();
                 currentScene.update(dt);
-
-                //Imgui studd
-                //Displays active gameobject variables through imgui window
-                //TODO: Fix bug where random lines occur
-                this.imguiLayer.update(dt, currentScene);
             }
+
+            this.framebuffer.unbind();
+
+            //Imgui studd
+            //Displays active gameobject variables through imgui window
+            this.imguiLayer.update(dt, currentScene);
+
 
             glfwSwapBuffers(glfwWindow);
 
@@ -248,5 +260,13 @@ public class Window {
 
     public static void setHeight(int newHeight) {
         get().height = newHeight;
+    }
+
+    public static Framebuffer getFramebuffer() {
+        return get().framebuffer;
+    }
+
+    public static float getTargetAspectRatio() {
+        return (float) 16 / 9;
     }
 }

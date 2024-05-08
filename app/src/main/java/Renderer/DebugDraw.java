@@ -134,7 +134,6 @@ public class DebugDraw {
     //Add linne2D methods
     //#######################################################################//
     public static void addLine2D(Vector2f start, Vector2f end) {
-        //TODO: ADD CONSTANTS FOR COMMON COLOURS
         //Set default parameters
         addLine2D(start, end, new Vector3f(0, 1, 0), 1);
     }
@@ -152,7 +151,4 @@ public class DebugDraw {
 
         DebugDraw.lines.add(new Line2D(start, end, colour, lifeTime));
     }
-
-
-
 }

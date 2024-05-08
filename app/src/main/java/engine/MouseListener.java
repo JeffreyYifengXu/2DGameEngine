@@ -3,6 +3,7 @@ package engine;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
+import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 /**
@@ -15,6 +16,10 @@ public class MouseListener {
     private double x, y, lastY, lastX;
     private boolean mouseButtonPressed[] = new boolean[9];
     private boolean isDragging;
+
+    private Vector2f gameViewportPos = new Vector2f();
+    private Vector2f gameViewportSize = new Vector2f();
+
 
     private MouseListener() {
         this.scrollX = 0.0;
@@ -102,8 +107,8 @@ public class MouseListener {
     }
 
     public static float getOrthoX() {
-        float currentX = getX();
-        currentX = (currentX / (float)Window.getWidth()) * 2.0f - 1.0f;
+        float currentX = getX() - get().gameViewportPos.x;
+        currentX = (currentX / (float) get().gameViewportSize.x) * 2.0f - 1.0f;
 
         Vector4f tmp = new Vector4f(currentX, 0, 0, 1); //Need vector4f to do matrix multiplication with another vector4f
 
@@ -116,8 +121,8 @@ public class MouseListener {
     }
 
     public static float getOrthoY() {
-        float currentY = Window.getHeight() - getY(); //Y coordinates are flipped in opengl
-        currentY = (currentY / (float)Window.getHeight()) * 2.0f - 1.0f;
+        float currentY = getY() - get().gameViewportPos.y; //Y coordinates are flipped in opengl
+        currentY = -((currentY / (float) get().gameViewportSize.y) * 2.0f - 1.0f);
 
         Vector4f tmp = new Vector4f(0, currentY, 0, 1); //Need vector4f to do matrix multiplication with another vector4f
 
@@ -127,7 +132,6 @@ public class MouseListener {
         currentY = tmp.y;
         
         return currentY  ;
-
     }
 
     public static float getDx() {
@@ -158,7 +162,11 @@ public class MouseListener {
         }
     }
 
+    public static void setGameViewportPos(Vector2f gameViewportPos) {
+        get().gameViewportPos.set(gameViewportPos);
+    }
 
-
-
+    public static void setGameViewportSize(Vector2f gameViewportSize) {
+        get().gameViewportSize.set(gameViewportSize);
+    }
 }

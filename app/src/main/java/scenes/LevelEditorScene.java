@@ -58,7 +58,9 @@ public class LevelEditorScene extends Scene{
 
         
         if (levelLoaded) {
-            this.activeGameObject = gameObjects.get(2);
+            if (gameObjects.size() > 0) {
+                this.activeGameObject = gameObjects.get(0);
+            }
             return;
         }
 
@@ -106,6 +108,17 @@ public class LevelEditorScene extends Scene{
             18, 18, 180, 0));
 
         System.out.println("SpriteSheets successfully loaded\n");
+
+        //Ensure each gameobject have unique texture
+        for (GameObject gobj : gameObjects) {
+            if (gobj.getComponent(SpriteRenderer.class) != null) {
+
+                SpriteRenderer spr = gobj.getComponent(SpriteRenderer.class);
+                if (spr.getTexture() != null) {
+                    spr.setTexture(AssetPool.getTexture(spr.getTexture().getFilePath()));
+                }
+            }
+        } 
     }
 
     /**

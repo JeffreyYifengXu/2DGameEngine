@@ -3,19 +3,25 @@ package engine;
 import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
 import static org.lwjgl.glfw.GLFW.glfwSetCursor;
 
+import Editor.GameViewWindow;
 import imgui.ImFontAtlas;
 import imgui.ImFontConfig;
 import imgui.ImGui;
 import imgui.ImGuiIO;
+import imgui.ImGuiStyle;
 import imgui.callback.ImStrConsumer;
 import imgui.callback.ImStrSupplier;
 import imgui.flag.ImGuiBackendFlags;
+import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.flag.ImGuiFreeTypeBuilderFlags;
 import imgui.flag.ImGuiKey;
 import imgui.flag.ImGuiMouseCursor;
+import imgui.flag.ImGuiStyleVar;
+import imgui.flag.ImGuiWindowFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
+import imgui.type.ImBoolean;
 import scenes.Scene;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -54,22 +60,6 @@ public class ImGuiLayer {
         ImGui.destroyContext();
     }
 
-    /*
-     * Updates the interface corresponding to the frame
-     */
-
-    public void update(float dt, Scene currentScene) {
-        startFrame(dt);
-
-        // Code goes between newFrame and render
-        ImGui.newFrame();
-        currentScene.sceneimgui();
-        // ImGui.showDemoWindow();
-        ImGui.render();
-
-        //end of frame
-        imGuiGl3.renderDrawData(ImGui.getDrawData());
-    }
 
     private void initImGui() {
         ImGui.createContext();
@@ -82,6 +72,8 @@ public class ImGuiLayer {
 
         io.setIniFilename("imgui.in"); // saves the window configuration
         io.setConfigFlags(ImGuiConfigFlags.NavEnableKeyboard); // Navigation with keyboard
+        io.setConfigFlags(ImGuiConfigFlags.DockingEnable);
+
         io.setBackendFlags(ImGuiBackendFlags.HasMouseCursors); // Mouse cursors to display while resizing windows etc.
         io.setBackendPlatformName("imgui_java_impl_glfw");
 
@@ -165,8 +157,10 @@ public class ImGuiLayer {
                 ImGui.setWindowFocus(null);
             }
 
-            //If glfw is not using the mouse, pass the call back to the custom MouseListener call back function.
-            if (!io.getWantCaptureMouse()) {
+            //If glfw is not using the mouse, 
+            //Or the mouse cursor is outside of the game view window
+            // pass the call back to the custom MouseListener call back function.
+            if (!io.getWantCaptureMouse() || GameViewWindow.getWantCaptureMouse()) {
                 MouseListener.mouseButtonCallback(w, button, action, mods);
             }
         });
@@ -237,5 +231,53 @@ public class ImGuiLayer {
         final int imguiCursor = ImGui.getMouseCursor();
         glfwSetCursor(glfwWindow, mouseCursors[imguiCursor]);
         glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+
+    /*
+     * Updates the interface corresponding to the frame
+     */
+
+     public void update(float dt, Scene currentScene) {
+        startFrame(dt);
+
+        // Code goes between newFrame and render
+        ImGui.newFrame();
+        dockSpaceInit();
+        currentScene.sceneimgui();
+        // ImGui.showDemoWindow();
+
+        //Game view port
+        GameViewWindow.imgui();
+        ImGui.end();
+        ImGui.render();
+
+        //end of frame
+        imGuiGl3.renderDrawData(ImGui.getDrawData());
+    }
+
+
+    /**
+     * Allows for imgui window docking.
+     */
+    private void dockSpaceInit() {
+        int windowFlags = ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoDocking;
+
+        ImGui.setNextWindowPos(0.0f, 0.0f, ImGuiCond.Always);
+        ImGui.setNextWindowSize(Window.getWidth(), Window.getHeight());
+
+        //Set up style of window
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
+
+        //Bitwise assignment, existing flags are preserved while new ones are added.
+        windowFlags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse |
+            ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove |
+            ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
+        
+        ImGui.begin("DockSpace", new ImBoolean(true), windowFlags);
+        ImGui.popStyleVar(2);
+
+        //DockSpace
+        ImGui.dockSpace(ImGui.getID("Dockspace"));
     }
 }

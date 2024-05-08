@@ -194,7 +194,7 @@ public class RenderBatch implements Comparable<RenderBatch>{
         //Loop through a list of textures and find the one that matches the one of interest
         if (sprite.getTexture() != null) {
             for (int i=0; i < textures.size(); i++) {
-                if (textures.get(i) == sprite.getTexture()) {
+                if (textures.get(i).equals(sprite.getTexture())) {
                     texId = i + 1; //Reserve the first slot to be zero
                     break;
                 }       
