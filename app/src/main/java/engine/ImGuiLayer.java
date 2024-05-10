@@ -4,6 +4,8 @@ import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
 import static org.lwjgl.glfw.GLFW.glfwSetCursor;
 
 import Editor.GameViewWindow;
+import Editor.PropertiesWindow;
+import Renderer.PickingTexture;
 import imgui.ImFontAtlas;
 import imgui.ImFontConfig;
 import imgui.ImGui;
@@ -34,14 +36,20 @@ public class ImGuiLayer {
 
     private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
+    
+    private GameViewWindow gameViewWindow;
 
     private final long[] mouseCursors = new long[ImGuiMouseCursor.COUNT];
 
     private long glfwWindow;
     private String glslVersion = "#version 330 core";
 
-    public ImGuiLayer(long glfwWindow) {
+    private PropertiesWindow propertiesWindow;
+
+    public ImGuiLayer(long glfwWindow, PickingTexture pickingTexture) {
         this.glfwWindow = glfwWindow;
+        this.gameViewWindow = new GameViewWindow();
+        this.propertiesWindow = new PropertiesWindow(pickingTexture);
     }
 
     public void init() {
@@ -160,7 +168,7 @@ public class ImGuiLayer {
             //If glfw is not using the mouse, 
             //Or the mouse cursor is outside of the game view window
             // pass the call back to the custom MouseListener call back function.
-            if (!io.getWantCaptureMouse() || GameViewWindow.getWantCaptureMouse()) {
+            if (!io.getWantCaptureMouse() || gameViewWindow.getWantCaptureMouse()) {
                 MouseListener.mouseButtonCallback(w, button, action, mods);
             }
         });
@@ -243,11 +251,14 @@ public class ImGuiLayer {
         // Code goes between newFrame and render
         ImGui.newFrame();
         dockSpaceInit();
-        currentScene.sceneimgui();
+        currentScene.imgui();
+
+        propertiesWindow.update(dt, currentScene);
+        propertiesWindow.imgui();
         // ImGui.showDemoWindow();
 
         //Game view port
-        GameViewWindow.imgui();
+        gameViewWindow.imgui();
         ImGui.end();
         ImGui.render();
 

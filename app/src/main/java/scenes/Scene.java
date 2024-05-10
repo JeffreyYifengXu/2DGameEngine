@@ -17,7 +17,7 @@ import components.DeserializerComponent;
 import engine.Camera;
 import engine.GameObject;
 import engine.GameObjectDeserializer;
-import imgui.ImGui;
+
 
 
 
@@ -27,7 +27,6 @@ public abstract class Scene {
     protected Camera camera;
     private boolean isRunning = false; 
     protected List<GameObject> gameObjects = new ArrayList<>();
-    protected GameObject activeGameObject = null;
     protected boolean levelLoaded = false;
 
     protected boolean madeChanges = false;
@@ -63,20 +62,22 @@ public abstract class Scene {
         }
     }
 
+    public GameObject getGameObject(int gameObjectId) {
+        for (GameObject ob: gameObjects) {
+            if (ob.getUid() == gameObjectId) {
+                return ob;
+            }
+        }
+
+        return null;
+    }
+
     public abstract void update(float dt);
+
+    public abstract void render();
 
     public Camera camera() {
         return this.camera;
-    }
-
-    public void sceneimgui() {
-        if (activeGameObject != null) {
-            ImGui.begin("Inspector");
-            activeGameObject.imgui(); //Inspect the gameobject of interest
-            ImGui.end();
-        }
-
-        imgui(); //Create custom scene integrator
     }
 
     public void imgui() {
@@ -135,10 +136,9 @@ public abstract class Scene {
 
             int maxGoId = -1;
             int maxCompId = -1;
-
+            int i;
             GameObject[] objs = gson.fromJson(inFile, GameObject[].class);
-            for (int i=0; i < objs.length; i++) {
-                System.out.println("GameObjects loaded: " + objs[i].getName());
+            for (i=0; i < objs.length; i++) {
 
                 addGameObjectToScene(objs[i]);
                 
@@ -155,6 +155,8 @@ public abstract class Scene {
                 }
             }
 
+            System.out.println("Succesfully loaded " + i + " objects");
+
             maxCompId++;
             maxGoId++;
             GameObject.init(maxGoId);
@@ -163,6 +165,13 @@ public abstract class Scene {
 
         this.levelLoaded = true;
         System.out.println("Level successfully loaded");
+    }
+
+    //debug function
+    public void printAllGameObjects() {
+        for (GameObject ob: gameObjects) {
+            System.out.println(ob.getUid());
+        }
     }
 }
 

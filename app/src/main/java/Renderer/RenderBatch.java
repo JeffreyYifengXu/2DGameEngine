@@ -26,7 +26,6 @@ import org.joml.Vector4f;
 
 import components.SpriteRenderer;
 import engine.Window;
-import util.AssetPool;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -41,13 +40,15 @@ public class RenderBatch implements Comparable<RenderBatch>{
     private final int TEX_COORDS_SIZE = 2;
     private final int TEX_ID_SIZE = 1;
     private final int MAX_NUM_OF_TEXTURES = 8;
+    private final int ENTITY_ID_SIZE = 1;
 
     private final int POS_OFFSET = 0;
     private final int COLOUR_OFFSET = POS_OFFSET + POS_SIZE * Float.BYTES;
     private final int TEX_COORDS_OFFSET = COLOUR_OFFSET + COLOUR_SIZE * Float.BYTES;
     private final int TEX_ID_OFFSET = TEX_COORDS_OFFSET + TEX_COORDS_SIZE * Float.BYTES;
-    private final int VERTEX_SIZE = 9;
+    private final int VERTEX_SIZE = 10;
     private final int VERTEX_SIZE_BYTES = VERTEX_SIZE * Float.BYTES;
+    private final int ENTITY_ID_OFFSET = TEX_ID_OFFSET + TEX_ID_SIZE * Float.BYTES;
 
     private SpriteRenderer[] sprites;
     private int numSprites;
@@ -58,15 +59,10 @@ public class RenderBatch implements Comparable<RenderBatch>{
     private List<Texture> textures; //Textures contained within the current batch
     private int vaoID, vboID;
     private int maxBatchSize;
-    private Shader shader;
     private int zIndex;
 
     public RenderBatch(int maxBatchSize, int zIndex) { //maxBatchsize tells exactly how many quads are going to be used.
-        // shader = new Shader("app/assets/shaders/default.glsl");
-        // shader.compile();
         this.zIndex = zIndex;
-
-        shader = AssetPool.getShader("app/assets/shaders/default.glsl");
         
         this.sprites = new SpriteRenderer[maxBatchSize];
         this.maxBatchSize = maxBatchSize;
@@ -95,7 +91,7 @@ public class RenderBatch implements Comparable<RenderBatch>{
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
 
-        //Enable the buffer attribute pointers, Talks to the GPU
+        //Enable the buffer attribute pointers, Talks to the GPU using the shaders
         glVertexAttribPointer(0, POS_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, POS_OFFSET);
         glEnableVertexAttribArray(0);
 
@@ -107,6 +103,9 @@ public class RenderBatch implements Comparable<RenderBatch>{
 
         glVertexAttribPointer(3, TEX_ID_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, TEX_ID_OFFSET);
         glEnableVertexAttribArray(3);
+
+        glVertexAttribPointer(4, ENTITY_ID_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, ENTITY_ID_OFFSET);
+        glEnableVertexAttribArray(4);
     }
 
 
@@ -152,6 +151,7 @@ public class RenderBatch implements Comparable<RenderBatch>{
         }
 
         //Use Shader
+        Shader shader = Renderer.getBoundShader();
         shader.use();
         shader.uploadMat4f("uProjection", Window.getScene().camera().getProjectionMatrix());
         shader.uploadMat4f("uView", Window.getScene().camera().getViewMatrix());
@@ -229,6 +229,9 @@ public class RenderBatch implements Comparable<RenderBatch>{
 
             //Load texture id
             vertices[offset + 8] = texId;
+
+            //Load entity id
+            vertices[offset + 9] = sprite.gameObject.getUid() + 1;
 
 
             offset += VERTEX_SIZE;

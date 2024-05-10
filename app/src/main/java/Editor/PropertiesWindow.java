@@ -1,0 +1,41 @@
+package Editor;
+
+import engine.GameObject;
+import engine.MouseListener;
+import imgui.ImGui;
+import scenes.Scene;
+
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
+
+import Renderer.PickingTexture;
+
+public class PropertiesWindow {
+
+    private GameObject activeGameObject = null;
+    private PickingTexture pickingTexture;
+
+    public PropertiesWindow(PickingTexture pickingTexture) {
+        this.pickingTexture = pickingTexture;
+    }
+
+    public void update(float dt, Scene currentScene) {
+        if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT)) {
+            int x = (int) MouseListener.getScreenX();
+            int y = (int) MouseListener.getScreenY();
+
+            System.out.println("Location at: [" + x + ", " + y + "]");
+
+            int gameObjectId = pickingTexture.readPixel(x, y);
+            System.out.println("Target gameObject id: " + gameObjectId);
+            activeGameObject = currentScene.getGameObject(gameObjectId);
+        }
+    }
+
+    public void imgui() {
+        if (activeGameObject != null) {
+            ImGui.begin("Inspector");
+            activeGameObject.imgui();
+            ImGui.end();
+        }
+    }
+}

@@ -60,5 +60,4 @@ public class Framebuffer {
     public int getTextureId() {
         return texture.getId();
     }
-    
 }

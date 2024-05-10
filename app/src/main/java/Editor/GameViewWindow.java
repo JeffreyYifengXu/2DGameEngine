@@ -11,9 +11,9 @@ import imgui.flag.ImGuiWindowFlags;
 public class GameViewWindow {
     
     //Saves the screen coordinates
-    private static float leftX, rightX, bottomY, topY;
+    private float leftX, rightX, bottomY, topY;
 
-    public static void imgui() {
+    public void imgui() {
 
         int windowFlags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse;
         ImGui.begin("Game view window", windowFlags);
@@ -48,7 +48,7 @@ public class GameViewWindow {
      * Check if mouse cursor is within gameviewport boundries
      * @return
      */
-    public static boolean getWantCaptureMouse() {
+    public boolean getWantCaptureMouse() {
         return MouseListener.getX() >= leftX &&
                MouseListener.getY() >= bottomY &&
                MouseListener.getX() <= rightX &&
@@ -58,7 +58,7 @@ public class GameViewWindow {
     /*
      * Determine the largest size of the window viewport that maintains the correct aspect ratio
      */
-    private static ImVec2 getLargestSizeForViewport() {
+    private ImVec2 getLargestSizeForViewport() {
         ImVec2 windowSize = new ImVec2();
         ImGui.getContentRegionAvail(windowSize);
 
@@ -77,7 +77,7 @@ public class GameViewWindow {
         return new ImVec2(aspectWidth, aspectHeight);
     }
 
-    private static ImVec2 getCenteredPositionForViewport(ImVec2 aspectSize) {
+    private ImVec2 getCenteredPositionForViewport(ImVec2 aspectSize) {
         ImVec2 windowSize = new ImVec2();
         ImGui.getContentRegionAvail(windowSize);
 

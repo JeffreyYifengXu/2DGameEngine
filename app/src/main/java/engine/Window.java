@@ -1,7 +1,7 @@
 package engine;
 
 import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
-// import static org.lwjgl.glfw.GLFW.GLFW_MAXIMIZED;
+import static org.lwjgl.glfw.GLFW.GLFW_MAXIMIZED;
 import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
 import static org.lwjgl.glfw.GLFW.GLFW_TRUE;
 import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
@@ -26,10 +26,12 @@ import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_ONE;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.glBlendFunc;
@@ -42,20 +44,26 @@ import org.lwjgl.opengl.GL;
 
 import Renderer.DebugDraw;
 import Renderer.Framebuffer;
+import Renderer.PickingTexture;
+import Renderer.Renderer;
+import Renderer.Shader;
 import scenes.LevelEditorScene;
 import scenes.LevelScene;
 import scenes.Scene;
+import util.AssetPool;
 
 /**
  * Manages the window for the game
  */
 public class Window {
+    private static final int GLFW_MOUSE_BUTTON_LEFT = 0;
     private int width, height;
     private String title;
     
-    private long glfwWindow;
-    private ImGuiLayer imguiLayer;
-    private Framebuffer framebuffer;
+    private long glfwWindow; //Stores the id that points to the generated window
+    private ImGuiLayer imguiLayer; //Stores all imgui stuff (User menus etc)
+    private Framebuffer framebuffer; //Manages frambuffer
+    private PickingTexture pickingTexture; //Manages 
     
     public float r, g, b, a;
 
@@ -156,7 +164,7 @@ public class Window {
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-        // glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+        glfwWindowHint(GLFW_MAXIMIZED, GLFW_FALSE);
 
         //Create the window
         glfwWindow = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
@@ -187,13 +195,15 @@ public class Window {
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-        //Create and initialise imgui
-        imguiLayer = new ImGuiLayer(glfwWindow);
-        imguiLayer.init();
-
         //Initialize framebuffer object
         this.framebuffer = new Framebuffer(1920, 1080);
+        this.pickingTexture = new PickingTexture(1920, 1080);
         glViewport(0, 0, 1920, 1080);
+
+        //Create and initialise imgui
+        imguiLayer = new ImGuiLayer(glfwWindow, pickingTexture);
+        imguiLayer.init();
+
 
         Window.changeScene(0);
     }
@@ -208,29 +218,48 @@ public class Window {
         float endTime;;
         float dt = -1.0f;
 
+        Shader defaultShader = AssetPool.getShader("app/assets/shaders/default.glsl");
+        Shader pickingShader = AssetPool.getShader("app/assets/shaders/pickingShader.glsl");
+
         //Main loop
         while (!glfwWindowShouldClose(glfwWindow)) {
             //Poll events
             glfwPollEvents();
+
+            //----------Render to picking texture stored in frame buffer-------------
+            glDisable(GL_BLEND);
+            pickingTexture.enableWriting();
+
+            glViewport(0, 0, 1920, 1080);
+            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            Renderer.bindShader(pickingShader);
+            currentScene.render();
+
+            pickingTexture.disableWriting();
+            glEnable(GL_BLEND);
 
             //Draw the debug lines
             DebugDraw.beginFrame();
 
             //bind frambuffer, allowing rendering offscreen
             this.framebuffer.bind();
-            
             glClearColor(r, g, b, a);
             glClear(GL_COLOR_BUFFER_BIT);
 
-            if (dt > 0){// Ensure no update is done during the first iteration
-                
+            if (dt >= 0){
                 DebugDraw.draw();
+
+                //Render actual game using default shader
+                Renderer.bindShader(defaultShader);
                 currentScene.update(dt);
+                currentScene.render();
             }
 
             this.framebuffer.unbind();
 
-            //Imgui studd
+            //Imgui stuff
             //Displays active gameobject variables through imgui window
             this.imguiLayer.update(dt, currentScene);
 

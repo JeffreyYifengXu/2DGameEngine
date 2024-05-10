@@ -106,6 +106,18 @@ public class MouseListener {
         return (float)get().y;
     }
 
+    public static float getScreenX() {
+        float currentX = getX() - get().gameViewportPos.x;
+        currentX = (currentX / (float) get().gameViewportSize.x) * 1920f;
+        return currentX;
+    }
+
+    public static float getScreenY() {
+        float currentY = getY() - get().gameViewportPos.y; //Y coordinates are flipped in opengl
+        currentY = 1080f -((currentY / (float) get().gameViewportSize.y) * 1080f);
+        return currentY  ;
+    }
+
     public static float getOrthoX() {
         float currentX = getX() - get().gameViewportPos.x;
         currentX = (currentX / (float) get().gameViewportSize.x) * 2.0f - 1.0f;
