@@ -6,8 +6,7 @@ import components.MouseControls;
 import components.Sprite;
 import components.SpriteRenderer;
 import components.Spritesheet;
-import editor.EditorCamera;
-
+import edittool.EditorCamera;
 import engine.Camera;
 import engine.GameObject;
 import engine.Prefab;
@@ -25,11 +24,7 @@ import util.Settings;
 
 public class LevelEditorScene extends Scene{
 
-    private GameObject tesObject;
     private Spritesheet sprites;
-
-    private GameObject obj1;
-    private SpriteRenderer obj1Sprite;
 
     GameObject levelEditorUtil = new GameObject("LevelEditor", new Transform(new Vector2f()), 0);
 
@@ -101,6 +96,7 @@ public class LevelEditorScene extends Scene{
     @Override
     public void update(float dt) {
         levelEditorUtil.update(dt);
+        camera.adjustProjection();
 
         //Currently no updates done to gameobjects
         for (GameObject go: this.gameObjects) {

@@ -35,6 +35,7 @@ public abstract class Component {
                     field.setAccessible(true); //Temporarily set private variables to be accessible
                 }
 
+                @SuppressWarnings("rawtypes")
                 Class type = field.getType();
                 Object value = field.get(this);
                 String name = field.getName();

@@ -1,4 +1,4 @@
-package editor;
+package edittool;
 
 import engine.GameObject;
 import engine.MouseListener;

@@ -8,6 +8,8 @@ public class Camera {
     private Matrix4f projectionMatrix, viewMatrix, inverseProjection, inverseView;
     private Vector2f projectionSize = new Vector2f(32.0f * 40.0f, 32.0f * 21.0f);
 
+    private float zoom = 1.0f; //Set the zoom of the camera
+
     public Vector2f position;
     
 
@@ -34,7 +36,7 @@ public class Camera {
      */
     public void adjustProjection() {
         projectionMatrix.identity();
-        projectionMatrix.ortho(0.0f, projectionSize.x, 0.0f, projectionSize.y, 0.0f, 100.0f);
+        projectionMatrix.ortho(0.0f, projectionSize.x * this.zoom, 0.0f, projectionSize.y * this.zoom, 0.0f, 100.0f);
         projectionMatrix.invert(inverseProjection);
     }
 
@@ -71,9 +73,25 @@ public class Camera {
         return projectionSize;
     }
 
+    public void setProjectionSize(Vector2f projectionSize) {
+        this.projectionSize = projectionSize;
+    }
+
     public void updatePos(float x, float y) {
         position.x = x;
         position.y = y;
+    }
+
+    public float getZoom() {
+        return zoom;
+    }
+
+    public void setZoom(float zoom) {
+        this.zoom = zoom;
+    }
+
+    public void addZoom(float val) {
+        this.zoom += val;
     }
 }
 

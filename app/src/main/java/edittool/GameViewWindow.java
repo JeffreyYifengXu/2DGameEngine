@@ -1,4 +1,4 @@
-package editor;
+package edittool;
 
 import org.joml.Vector2f;
 

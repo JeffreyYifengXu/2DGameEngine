@@ -56,7 +56,7 @@ import util.AssetPool;
  * Manages the window for the game
  */
 public class Window {
-    private static final int GLFW_MOUSE_BUTTON_LEFT = 0;
+    // private static final int GLFW_MOUSE_BUTTON_LEFT = 0;
     private int width, height;
     private String title;
     
@@ -235,6 +235,7 @@ public class Window {
 
             Renderer.bindShader(pickingShader);
             currentScene.render();
+            //----------------------------------------------------------------------
 
             pickingTexture.disableWriting();
             glEnable(GL_BLEND);
@@ -250,7 +251,7 @@ public class Window {
             if (dt >= 0){
                 DebugDraw.draw();
 
-                //Render actual game using default shader
+                //---------Render actual game using default shader-----------------
                 Renderer.bindShader(defaultShader);
                 currentScene.update(dt);
                 currentScene.render();
@@ -262,8 +263,8 @@ public class Window {
             //Displays active gameobject variables through imgui window
             this.imguiLayer.update(dt, currentScene);
 
-
             glfwSwapBuffers(glfwWindow);
+            MouseListener.endFrame(); //Ensure scroll value is set to zero
 
             endTime = (float)glfwGetTime();
             dt = endTime - beginTime;
