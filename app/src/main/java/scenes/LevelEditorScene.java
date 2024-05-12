@@ -1,16 +1,13 @@
 package scenes;
 
 import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
-
-import Renderer.DebugDraw;
 import components.GridLines;
 import components.MouseControls;
-import components.Rigidbody;
 import components.Sprite;
 import components.SpriteRenderer;
 import components.Spritesheet;
+import editor.EditorCamera;
+
 import engine.Camera;
 import engine.GameObject;
 import engine.Prefab;
@@ -48,12 +45,13 @@ public class LevelEditorScene extends Scene{
      */
     @Override
     public void init() {
-        levelEditorUtil.addComponent(new MouseControls());
-        levelEditorUtil.addComponent(new GridLines());
-
         loadResources();
         this.camera = new Camera(new Vector2f(-250, 0));
         this.sprites = AssetPool.getSpritesheet("app/assets/images/spritesheets/tilemap.png");
+        
+        levelEditorUtil.addComponent(new MouseControls());
+        levelEditorUtil.addComponent(new GridLines());
+        levelEditorUtil.addComponent(new EditorCamera(camera));
         // this.sprites = AssetPool.getSpritesheet("app/assets/images/spritesheets/decorationsAndBlocks.png");
 
         // printAllGameObjects();

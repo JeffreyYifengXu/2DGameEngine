@@ -28,6 +28,8 @@ public class MouseListener {
         this.y = 0.0;
         this.lastX = 0.0;
         this.lastY = 0.0;
+
+        this.isDragging = false;
     }
 
     /**
@@ -67,7 +69,7 @@ public class MouseListener {
         if (action == GLFW_PRESS) {
             //Ensure that only conventional mouse buttons were pressed
             if (button < get().mouseButtonPressed.length) {
-            get().mouseButtonPressed[button] = true;
+                get().mouseButtonPressed[button] = true;
             }
         } else if (action == GLFW_RELEASE) {
             get().mouseButtonPressed[button] = false;

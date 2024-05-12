@@ -1,13 +1,12 @@
-package Editor;
+package editor;
 
 import engine.GameObject;
 import engine.MouseListener;
 import imgui.ImGui;
+import renderer.PickingTexture;
 import scenes.Scene;
 
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
-
-import Renderer.PickingTexture;
 
 public class PropertiesWindow {
 
@@ -33,7 +32,7 @@ public class PropertiesWindow {
 
     public void imgui() {
         if (activeGameObject != null) {
-            ImGui.begin("Inspector");
+            ImGui.begin("Properties");
             activeGameObject.imgui();
             ImGui.end();
         }

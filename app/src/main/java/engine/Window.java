@@ -42,11 +42,11 @@ import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
-import Renderer.DebugDraw;
-import Renderer.Framebuffer;
-import Renderer.PickingTexture;
-import Renderer.Renderer;
-import Renderer.Shader;
+import renderer.DebugDraw;
+import renderer.Framebuffer;
+import renderer.PickingTexture;
+import renderer.Renderer;
+import renderer.Shader;
 import scenes.LevelEditorScene;
 import scenes.LevelScene;
 import scenes.Scene;
@@ -203,7 +203,6 @@ public class Window {
         //Create and initialise imgui
         imguiLayer = new ImGuiLayer(glfwWindow, pickingTexture);
         imguiLayer.init();
-
 
         Window.changeScene(0);
     }

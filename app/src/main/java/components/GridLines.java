@@ -3,8 +3,8 @@ package components;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import Renderer.DebugDraw;
 import engine.Window;
+import renderer.DebugDraw;
 import util.Settings;
 
 public class GridLines extends Component{

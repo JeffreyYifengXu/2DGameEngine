@@ -11,12 +11,12 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import Renderer.Renderer;
 import components.Component;
 import components.DeserializerComponent;
 import engine.Camera;
 import engine.GameObject;
 import engine.GameObjectDeserializer;
+import renderer.Renderer;
 
 
 
@@ -68,7 +68,6 @@ public abstract class Scene {
                 return ob;
             }
         }
-
         return null;
     }
 

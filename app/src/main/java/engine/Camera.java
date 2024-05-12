@@ -71,4 +71,23 @@ public class Camera {
         return projectionSize;
     }
 
+    public void updatePos(float x, float y) {
+        position.x = x;
+        position.y = y;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

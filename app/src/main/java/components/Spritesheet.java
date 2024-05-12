@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.joml.Vector2f;
 
-import Renderer.Texture;
+import renderer.Texture;
 
 public class Spritesheet {
 

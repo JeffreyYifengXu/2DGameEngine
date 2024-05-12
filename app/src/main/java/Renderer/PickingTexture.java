@@ -1,4 +1,4 @@
-package Renderer;
+package renderer;
 
 import static org.lwjgl.opengl.GL30.glBindFramebuffer;
 import static org.lwjgl.opengl.GL30.glCheckFramebufferStatus;
@@ -47,6 +47,10 @@ public class PickingTexture {
         }
     }
 
+    /*
+     * Create a texture layer at which displays color on objects and -1 anywhere else. Allowing for
+     * precise mouse picking.
+     */
     public boolean init(int width, int height) {
         //Generate the frambuffer object
         fbo = glGenFramebuffers();

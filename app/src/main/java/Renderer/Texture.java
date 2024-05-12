@@ -1,4 +1,4 @@
-package Renderer;
+package renderer;
 
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_NEAREST;

@@ -3,9 +3,9 @@ package components;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
-import Renderer.Texture;
 import engine.Transform;
 import imgui.ImGui;
+import renderer.Texture;
 
 public class SpriteRenderer extends Component {
 

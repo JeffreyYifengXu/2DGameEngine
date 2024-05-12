@@ -4,9 +4,9 @@ import java.util.Map;
 import java.util.HashMap;
 import java.io.File;
 
-import Renderer.Shader;
-import Renderer.Texture;
 import components.Spritesheet;
+import renderer.Shader;
+import renderer.Texture;
 
 
 public class AssetPool {
