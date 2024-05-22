@@ -97,7 +97,15 @@ public abstract class Scene {
             //Don't save if no changes were made
             if (madeChanges) {
                 FileWriter writer = new FileWriter("level.txt");
-                writer.write(gson.toJson(this.gameObjects));
+
+                List<GameObject> objsToSave = new ArrayList<>();
+                for (GameObject obj: this.gameObjects) {
+                    if (obj.doSerialization()) {
+                        objsToSave.add(obj);
+                    }
+                }
+
+                writer.write(gson.toJson(objsToSave));
                 writer.close();
             }
         } catch (IOException e) {

@@ -42,6 +42,7 @@ import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
+import imgui.ImGui;
 import renderer.DebugDraw;
 import renderer.Framebuffer;
 import renderer.PickingTexture;
@@ -273,6 +274,10 @@ public class Window {
 
         currentScene.saveExit(); //Save current progress
         this.imguiLayer.destroy();
+    }
+
+    public static ImGuiLayer getImGuiLayer() {
+        return get().imguiLayer;
     }
 
     public static int getWidth() {

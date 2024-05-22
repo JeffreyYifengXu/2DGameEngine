@@ -8,6 +8,10 @@ import scenes.Scene;
 
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 
+/*
+ * Scans for perfect mouse picking
+ * Update the current active gameobject
+ */
 public class PropertiesWindow {
 
     private GameObject activeGameObject = null;
@@ -24,7 +28,7 @@ public class PropertiesWindow {
 
             System.out.println("Location at: [" + x + ", " + y + "]");
 
-            int gameObjectId = pickingTexture.readPixel(x, y);
+            int gameObjectId = pickingTexture.readPixel(x, y); //The pixel value is the id of gameobject that occupies the pixel
             System.out.println("Target gameObject id: " + gameObjectId);
             activeGameObject = currentScene.getGameObject(gameObjectId);
         }
@@ -36,5 +40,9 @@ public class PropertiesWindow {
             activeGameObject.imgui();
             ImGui.end();
         }
+    }
+
+    public GameObject getActiveGameObject() {
+        return this.activeGameObject;
     }
 }

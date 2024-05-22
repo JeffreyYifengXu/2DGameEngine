@@ -6,11 +6,13 @@ import components.MouseControls;
 import components.Sprite;
 import components.SpriteRenderer;
 import components.Spritesheet;
+import components.Translate;
 import edittool.EditorCamera;
 import engine.Camera;
 import engine.GameObject;
 import engine.Prefab;
 import engine.Transform;
+import engine.Window;
 import imgui.ImGui;
 import imgui.ImVec2;
 import util.AssetPool;
@@ -25,6 +27,7 @@ import util.Settings;
 public class LevelEditorScene extends Scene{
 
     private Spritesheet sprites;
+    private Spritesheet arrowSpritesheet;
 
     GameObject levelEditorUtil = new GameObject("LevelEditor", new Transform(new Vector2f()), 0);
 
@@ -42,14 +45,15 @@ public class LevelEditorScene extends Scene{
     public void init() {
         loadResources();
         this.camera = new Camera(new Vector2f(-250, 0));
-        this.sprites = AssetPool.getSpritesheet("app/assets/images/spritesheets/tilemap.png");
+        this.sprites = AssetPool.getSpritesheet("tilemap");
+        this.arrowSpritesheet = AssetPool.getSpritesheet("arrows");
         
         levelEditorUtil.addComponent(new MouseControls());
-        levelEditorUtil.addComponent(new GridLines());
+        levelEditorUtil.addComponent(new GridLines()); 
         levelEditorUtil.addComponent(new EditorCamera(camera));
-        // this.sprites = AssetPool.getSpritesheet("app/assets/images/spritesheets/decorationsAndBlocks.png");
+        levelEditorUtil.addComponent(new Translate(this.arrowSpritesheet, Window.getImGuiLayer().getPropertiesWindow()));
 
-        // printAllGameObjects();
+        levelEditorUtil.start();
     }
 
     /**
@@ -62,18 +66,18 @@ public class LevelEditorScene extends Scene{
         //Load shader
         AssetPool.getShader("app/assets/shaders/default.glsl");
         System.out.println("Shader successfully loaded\n");
-
         System.out.println("Loading spritesheets...");
-        //Load spritesheets, and create new spritesheet object
-        //Mario spritesheet
-        // AssetPool.addSpritesheet("app/assets/images/spritesheets/decorationsAndBlocks.png", 
-        //         new Spritesheet(AssetPool.getTexture("app/assets/images/spritesheets/decorationsAndBlocks.png"),
-        //         16, 16, 81, 0));
 
+        //Load spritesheets, and create new spritesheet object
         //Platform game sprite sheet
-        AssetPool.addSpritesheet("app/assets/images/spritesheets/tilemap.png", 
+        AssetPool.addSpritesheet("tilemap", 
             new Spritesheet(AssetPool.getTexture("app/assets/images/spritesheets/tilemap.png"),
             18, 18, 180, 0));
+        
+        //Arrows sprite sheet
+        AssetPool.addSpritesheet("arrows", 
+            new Spritesheet(AssetPool.getTexture("app/assets/images/arrows.png"),
+            24, 48, 3, 0));
 
         System.out.println("SpriteSheets successfully loaded\n");
 
@@ -136,7 +140,7 @@ public class LevelEditorScene extends Scene{
             ImGui.pushID(i); //Assign a different id for each sprite
             //When mouse button is clicked onto a block icon
             if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x, texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
-                GameObject obj = Prefab.generateSpriteObject(sprite, Settings.GRID_HEIGHT, Settings.GRID_WIDTH);
+                GameObject obj = Prefab.generateSpriteObject(sprite, Settings.GRID_HEIGHT, Settings.GRID_WIDTH, 0);
                 levelEditorUtil.getComponent(MouseControls.class).pickupObject(obj);
             }
             ImGui.popID();
@@ -153,3 +157,9 @@ public class LevelEditorScene extends Scene{
         ImGui.end();
     }
 }
+
+
+
+
+
+

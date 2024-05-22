@@ -11,6 +11,7 @@ import components.Component;
  */
 
 public class GameObject {
+    private boolean serialize = true;
     private static int ID_COUNTER = 0;
     private int uid = -1;
 
@@ -139,5 +140,13 @@ public class GameObject {
 
     public List<Component> getAllComponent() {
         return this.components;
+    }
+
+    public void setNoSerialize() {
+        this.serialize = false;
+    }
+
+    public boolean doSerialization() {
+        return this.serialize;
     }
 }

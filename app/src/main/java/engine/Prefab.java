@@ -7,7 +7,7 @@ import components.SpriteRenderer;
 
 public class Prefab {
     
-    public static GameObject generateSpriteObject(Sprite sprite, float sizeX, float sizeY) {
+    public static GameObject generateSpriteObject(Sprite sprite, float sizeX, float sizeY, float zIndex) {
         GameObject block = new GameObject("Sprite_Object",
             new Transform(new Vector2f(), new Vector2f(sizeX, sizeY)), 0);
 
