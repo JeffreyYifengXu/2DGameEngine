@@ -16,6 +16,7 @@ import components.DeserializerComponent;
 import engine.Camera;
 import engine.GameObject;
 import engine.GameObjectDeserializer;
+import engine.Transform;
 import renderer.Renderer;
 
 
@@ -77,6 +78,14 @@ public abstract class Scene {
 
     public Camera camera() {
         return this.camera;
+    }
+
+    public GameObject createGameObject(String name) {
+        GameObject go = new GameObject(name);
+        go.addComponent(new Transform());
+        go.transform = go.getComponent(Transform.class);
+
+        return go;
     }
 
     public void imgui() {
@@ -144,6 +153,8 @@ public abstract class Scene {
             int maxGoId = -1;
             int maxCompId = -1;
             int i;
+
+            GameObject.init(5); //Set max id to 3 to make room for the two arrows which takes up 1 and 2.
             GameObject[] objs = gson.fromJson(inFile, GameObject[].class);
             for (i=0; i < objs.length; i++) {
 
@@ -172,6 +183,14 @@ public abstract class Scene {
 
         this.levelLoaded = true;
         System.out.println("Level successfully loaded");
+    }
+
+    /*
+     * Remove the specified gameobject from the scene
+     */
+    public void removeGameObject(GameObject go) {
+        
+        gameObjects.remove(go);
     }
 
     //debug function

@@ -18,21 +18,16 @@ public class GameObject {
 
     private String name;
     private List<Component> components;
-    private int zIndex;
 
-    public Transform transform;
+    public transient Transform transform;
 
     /**
      * Initializes the gameobject
      * @param name
-     * @param transform
      */
-    public GameObject(String name, Transform transform, int zIndex) {
+    public GameObject(String name) {
         this.name = name;
         this.components = new ArrayList<>();
-        this.transform = transform;
-        this.zIndex = zIndex;
-
         this.uid = ID_COUNTER++;
     }
 
@@ -116,17 +111,12 @@ public class GameObject {
         }
     }
 
-    public int zIndex() {
-        return this.zIndex;
-    }
-
     public String getName() {
         return this.name;
     }
 
     public void getProperties() {
         System.out.println("name: " + this.name);
-        System.out.println("zIndex: " + this.zIndex);
         System.out.println("Position: " + this.transform.position);
     }
 
@@ -136,6 +126,16 @@ public class GameObject {
 
     public int getUid() {
         return this.uid;
+    }
+
+    public void setUid(int uid) {
+        this.uid = uid;
+        if (ID_COUNTER > this.uid) {
+            return;
+        }
+        else{
+            ID_COUNTER++;
+        }
     }
 
     public List<Component> getAllComponent() {

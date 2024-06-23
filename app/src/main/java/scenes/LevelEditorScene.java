@@ -11,7 +11,6 @@ import edittool.EditorCamera;
 import engine.Camera;
 import engine.GameObject;
 import engine.Prefab;
-import engine.Transform;
 import engine.Window;
 import imgui.ImGui;
 import imgui.ImVec2;
@@ -29,7 +28,7 @@ public class LevelEditorScene extends Scene{
     private Spritesheet sprites;
     private Spritesheet arrowSpritesheet;
 
-    GameObject levelEditorUtil = new GameObject("LevelEditor", new Transform(new Vector2f()), 0);
+    GameObject levelEditorUtil = this.createGameObject("LevelEditor");
 
     public LevelEditorScene() {
 
@@ -52,7 +51,6 @@ public class LevelEditorScene extends Scene{
         levelEditorUtil.addComponent(new GridLines()); 
         levelEditorUtil.addComponent(new EditorCamera(camera));
         levelEditorUtil.addComponent(new Translate(this.arrowSpritesheet, Window.getImGuiLayer().getPropertiesWindow()));
-
         levelEditorUtil.start();
     }
 
@@ -90,7 +88,7 @@ public class LevelEditorScene extends Scene{
                     spr.setTexture(AssetPool.getTexture(spr.getTexture().getFilePath()));
                 }
             }
-        } 
+        }
     }
 
     /**
@@ -101,7 +99,6 @@ public class LevelEditorScene extends Scene{
     public void update(float dt) {
         levelEditorUtil.update(dt);
         camera.adjustProjection();
-
         //Currently no updates done to gameobjects
         for (GameObject go: this.gameObjects) {
             go.update(dt);
@@ -114,10 +111,14 @@ public class LevelEditorScene extends Scene{
     }
 
     /**
-     * Manage the imgui spritesheet window, register clicks on to the icons
+     * Manage the imgui game block selection window, register clicks on to the icons
      */
     @Override
     public void imgui() {
+        ImGui.begin("Level Editor utilities");
+        levelEditorUtil.imgui();
+        ImGui.end();
+
         ImGui.begin("test window");
 
         ImVec2 windowPos = new ImVec2();

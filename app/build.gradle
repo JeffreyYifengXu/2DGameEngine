@@ -42,6 +42,9 @@ project.ext.lwjglVersion = "3.3.3"
 project.ext.lwjglNatives = "natives-windows"
 
 dependencies {
+	//test implementation
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+
 	//imgui files
 	implementation fileTree('libs') { include '*.jar'}
 

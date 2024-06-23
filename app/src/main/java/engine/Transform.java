@@ -2,14 +2,17 @@ package engine;
 
 import org.joml.Vector2f;
 
+import components.Component;
+
 /**
  * Represent and manipulate transformations (positions and sclae) of gameobjects in the 2D game environment
 */
-public class Transform {
+public class Transform extends Component{
 
     public Vector2f position;
     public Vector2f scale;
     public float rotation = 0.0f;
+    public int zIndex;
 
     /**
      * Creates new vector for position and scale
@@ -43,6 +46,7 @@ public class Transform {
     public void init(Vector2f position, Vector2f scale) {
         this.position = position;
         this.scale = scale;
+        this.zIndex = 0;
     }
 
     /**
@@ -72,6 +76,7 @@ public class Transform {
         if (!(o instanceof Transform)) return false; // Check if o is a type transform
 
         Transform t = (Transform) o; //Cast as a transform type
-        return t.position.equals(this.position) && t.scale.equals(this.scale);
+        return t.position.equals(this.position) && t.scale.equals(this.scale) &&
+                t.rotation == this.rotation && t.zIndex == this.zIndex;
     }
 }

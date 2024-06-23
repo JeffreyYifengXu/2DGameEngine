@@ -1,126 +1,26 @@
 [
   {
     "serialize": true,
-    "uid": 3,
-    "name": "Sprite_Object",
-    "components": [
-      {
-        "type": "components.SpriteRenderer",
-        "properties": {
-          "colour": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0,
-            "w": 1.0
-          },
-          "sprite": {
-            "texture": {
-              "filepath": "app/assets/images/spritesheets/tilemap.png",
-              "width": 360,
-              "height": 162
-            },
-            "texCoords": [
-              {
-                "x": 0.14444445,
-                "y": 0.9876543
-              },
-              {
-                "x": 0.14444445,
-                "y": 0.90123457
-              },
-              {
-                "x": 0.10555556,
-                "y": 0.90123457
-              },
-              {
-                "x": 0.10555556,
-                "y": 0.9876543
-              }
-            ],
-            "width": 18.0,
-            "height": 18.0
-          },
-          "uid": 6
-        }
-      }
-    ],
-    "zIndex": 0,
-    "transform": {
-      "position": {
-        "x": 64.0,
-        "y": 352.0
-      },
-      "scale": {
-        "x": 32.0,
-        "y": 32.0
-      },
-      "rotation": 0.0
-    }
-  },
-  {
-    "serialize": true,
-    "uid": 4,
-    "name": "Sprite_Object",
-    "components": [
-      {
-        "type": "components.SpriteRenderer",
-        "properties": {
-          "colour": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0,
-            "w": 1.0
-          },
-          "sprite": {
-            "texture": {
-              "filepath": "app/assets/images/spritesheets/tilemap.png",
-              "width": 360,
-              "height": 162
-            },
-            "texCoords": [
-              {
-                "x": 0.19444445,
-                "y": 0.9876543
-              },
-              {
-                "x": 0.19444445,
-                "y": 0.90123457
-              },
-              {
-                "x": 0.15555556,
-                "y": 0.90123457
-              },
-              {
-                "x": 0.15555556,
-                "y": 0.9876543
-              }
-            ],
-            "width": 18.0,
-            "height": 18.0
-          },
-          "uid": 7
-        }
-      }
-    ],
-    "zIndex": 0,
-    "transform": {
-      "position": {
-        "x": 96.0,
-        "y": 352.0
-      },
-      "scale": {
-        "x": 32.0,
-        "y": 32.0
-      },
-      "rotation": 0.0
-    }
-  },
-  {
-    "serialize": true,
     "uid": 5,
     "name": "Sprite_Object",
     "components": [
       {
+        "type": "engine.Transform",
+        "properties": {
+          "position": {
+            "x": 992.0,
+            "y": 864.0
+          },
+          "scale": {
+            "x": 32.0,
+            "y": 32.0
+          },
+          "rotation": 0.0,
+          "zIndex": 0,
+          "uid": 12
+        }
+      },
+      {
         "type": "components.SpriteRenderer",
         "properties": {
           "colour": {
@@ -156,22 +56,10 @@
             "width": 18.0,
             "height": 18.0
           },
-          "uid": 8
+          "uid": 13
         }
       }
-    ],
-    "zIndex": 0,
-    "transform": {
-      "position": {
-        "x": 128.0,
-        "y": 352.0
-      },
-      "scale": {
-        "x": 32.0,
-        "y": 32.0
-      },
-      "rotation": 0.0
-    }
+    ]
   },
   {
     "serialize": true,
@@ -179,63 +67,21 @@
     "name": "Sprite_Object",
     "components": [
       {
-        "type": "components.SpriteRenderer",
+        "type": "engine.Transform",
         "properties": {
-          "colour": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0,
-            "w": 1.0
+          "position": {
+            "x": 432.1277,
+            "y": 404.80856
           },
-          "sprite": {
-            "texture": {
-              "filepath": "app/assets/images/spritesheets/tilemap.png",
-              "width": 360,
-              "height": 162
-            },
-            "texCoords": [
-              {
-                "x": 0.29444444,
-                "y": 0.9876543
-              },
-              {
-                "x": 0.29444444,
-                "y": 0.90123457
-              },
-              {
-                "x": 0.25555557,
-                "y": 0.90123457
-              },
-              {
-                "x": 0.25555557,
-                "y": 0.9876543
-              }
-            ],
-            "width": 18.0,
-            "height": 18.0
+          "scale": {
+            "x": 32.0,
+            "y": 32.0
           },
-          "uid": 9
+          "rotation": 0.0,
+          "zIndex": 0,
+          "uid": 26
         }
-      }
-    ],
-    "zIndex": 0,
-    "transform": {
-      "position": {
-        "x": 64.0,
-        "y": 320.0
       },
-      "scale": {
-        "x": 32.0,
-        "y": 32.0
-      },
-      "rotation": 0.0
-    }
-  },
-  {
-    "serialize": true,
-    "uid": 7,
-    "name": "Sprite_Object",
-    "components": [
       {
         "type": "components.SpriteRenderer",
         "properties": {
@@ -253,98 +99,28 @@
             },
             "texCoords": [
               {
-                "x": 0.29444444,
+                "x": 0.19444445,
                 "y": 0.9876543
               },
               {
-                "x": 0.29444444,
+                "x": 0.19444445,
                 "y": 0.90123457
               },
               {
-                "x": 0.25555557,
+                "x": 0.15555556,
                 "y": 0.90123457
               },
               {
-                "x": 0.25555557,
-                "y": 0.9876543
-              }
-            ],
-            "width": 18.0,
-            "height": 18.0
-          },
-          "uid": 10
-        }
-      }
-    ],
-    "zIndex": 0,
-    "transform": {
-      "position": {
-        "x": 96.0,
-        "y": 320.0
-      },
-      "scale": {
-        "x": 32.0,
-        "y": 32.0
-      },
-      "rotation": 0.0
-    }
-  },
-  {
-    "serialize": true,
-    "uid": 8,
-    "name": "Sprite_Object",
-    "components": [
-      {
-        "type": "components.SpriteRenderer",
-        "properties": {
-          "colour": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0,
-            "w": 1.0
-          },
-          "sprite": {
-            "texture": {
-              "filepath": "app/assets/images/spritesheets/tilemap.png",
-              "width": 360,
-              "height": 162
-            },
-            "texCoords": [
-              {
-                "x": 0.29444444,
-                "y": 0.9876543
-              },
-              {
-                "x": 0.29444444,
-                "y": 0.90123457
-              },
-              {
-                "x": 0.25555557,
-                "y": 0.90123457
-              },
-              {
-                "x": 0.25555557,
+                "x": 0.15555556,
                 "y": 0.9876543
               }
             ],
             "width": 18.0,
             "height": 18.0
           },
-          "uid": 11
+          "uid": 27
         }
       }
-    ],
-    "zIndex": 0,
-    "transform": {
-      "position": {
-        "x": 128.0,
-        "y": 320.0
-      },
-      "scale": {
-        "x": 32.0,
-        "y": 32.0
-      },
-      "rotation": 0.0
-    }
+    ]
   }
 ]

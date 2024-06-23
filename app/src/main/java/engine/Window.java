@@ -42,7 +42,6 @@ import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
-import imgui.ImGui;
 import renderer.DebugDraw;
 import renderer.Framebuffer;
 import renderer.PickingTexture;
@@ -100,7 +99,6 @@ public class Window {
                 assert false : "unknow scene '" + newScene + "'";
                 break;
         }
-        
         
         currentScene.load(); //load current level
         currentScene.init(); 

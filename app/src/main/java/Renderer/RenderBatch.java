@@ -115,7 +115,7 @@ public class RenderBatch implements Comparable<RenderBatch>{
         this.sprites[index] = spr;
         this.numSprites++;
 
-        //Check if the sprite already have a texture, if it does, add the texture if we don't already have it.
+        //Check if the sprite already have a texture, add the texture if it don't already have it.
         if (spr.getTexture() != null) {
             if (!textures.contains(spr.getTexture())) {
                 textures.add(spr.getTexture());
@@ -127,6 +127,17 @@ public class RenderBatch implements Comparable<RenderBatch>{
 
         if (numSprites >= this.maxBatchSize) {
             this.hasRoom = false;
+        }
+    }
+
+    public void removeSprite(SpriteRenderer sprite) {
+        for (int i=0, j=0; j < this.numSprites; j++) {
+            if (sprites[j] == sprite) {
+                numSprites --;
+                this.hasRoom = true;
+            } else {
+                sprites[i++] = sprites[j]; 
+            }
         }
     }
 
@@ -255,6 +266,10 @@ public class RenderBatch implements Comparable<RenderBatch>{
 
             offset += VERTEX_SIZE;
         }
+    }
+
+    private void removeVertexProperties(int index) {
+        //TODO: Remove the vertex information at index
     }
 
     private int[] generateIndices() {
