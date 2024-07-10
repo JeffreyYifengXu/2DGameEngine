@@ -5,10 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.joml.Vector2f;
 import org.junit.jupiter.api.Test;
 
-import physicsEngine2D.CollisionDetector;
 import physicsEngine2D.PhysicsWorld;
-import physicsEngine2D.RigidBody;
+import physicsEngine2D.physics.CollisionDetector;
 import physicsEngine2D.primitives.AABB;
+import physicsEngine2D.primitives.RigidBody;
 
 public class collisionTests {
 
@@ -50,7 +50,7 @@ public class collisionTests {
         physicsWorld.addBody(rbB);
 
 
-        physicsWorld.detectCollisions();
+        physicsWorld.fixedUpdate(0.016f);
 
         assertTrue(rbA.getPosition().x == 8);
     }

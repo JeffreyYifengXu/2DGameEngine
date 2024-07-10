@@ -5,11 +5,18 @@ import java.util.List;
 
 import org.joml.Vector2f;
 
+import physicsEngine2D.physics.CollisionDetector;
+import physicsEngine2D.physics.CollisionHelper;
+import physicsEngine2D.physics.Collisions;
 import physicsEngine2D.primitives.AABB;
+import physicsEngine2D.primitives.RigidBody;
 
 public class PhysicsWorld {
-    List<RigidBody> bodies = new ArrayList<>();
+    public List<RigidBody> bodies = new ArrayList<>();
+    public List<RigidBody> immovableBodies = new ArrayList<>();
     public Vector2f gravity;
+
+    private static float timeElapsed = 0;
 
     public PhysicsWorld() {
         this.gravity = new Vector2f(0, -10); //Default gravity
@@ -28,40 +35,70 @@ public class PhysicsWorld {
      * Called in the game engine update loop.
      */
     public void update(float dt) {
-
+        fixedUpdate(dt);
     }
 
     /*
      * Check for simplest form of collision, rectangle vs rectangle without rotations
      */
-    public void detectCollisions() {
+    public void fixedUpdate(float dt) {
         int size = bodies.size();
 
-        //Brute force through on rigidbodies and check for collisions
+        //Integration step
+        for (int i=0; i < size; i++) {
+            RigidBody body = bodies.get(i);
+            body.step(dt);
+
+            body.resetColour();
+            body.updateVertices();
+        }
+
+
+        //Loop through all bodies to check for collisions
         for (int i=0; i < size - 1; i++) {
+            RigidBody rbA = bodies.get(i);
+
             for (int j= i+1; j < size; j++) {
-                RigidBody rbA = bodies.get(i);
                 RigidBody rbB = bodies.get(j);
-                if (CollisionDetector.AABBCollision(rbA, rbB)) {
-                    positionCorrection(rbA, rbB);
-                    resolveImpulse(rbA, rbB);
+
+                CollisionHelper vals = CollisionDetector.polygonCollision(rbA, rbB);
+                if (vals != null) {
+                    Vector2f normal = vals.getNormal();
+                    float depth = vals.getdepth();
+
+                    rbA.changeColour(1, 0f, 0f);
+                    rbB.changeColour(1, 0f, 0f);
+
+                    rbA.move(new Vector2f(normal).mul(depth / 2f).negate());
+                    rbB.move(normal.mul(depth / 2f));
+
+                    CollisionDetector.resolveCollision(rbA, rbB, normal, depth);
                 }
             }
         }
+
+        //Reset acceleration of all bodies to zero
+        for (int i=0; i < size; i++) {
+            //ensure the body wraps around the screen
+            checkBounds(bodies.get(i));
+        }
     }
 
-    public void positionCorrection(RigidBody rbA, RigidBody rbB) {
-        float rbAX = rbA.getPosition().x;
-        float rbAY = rbA.getPosition().y;
-        float rbBX = rbB.getPosition().x;
-        float rbBY = rbB.getPosition().y;
+    /*
+     * Correct two objects position to avoid overlapping after collision
+     */
+    public Vector2f positionCorrection(RigidBody rbA, RigidBody rbB) {
+        float rbAX = rbA.transform.position.x;
+        float rbAY = rbA.transform.position.y;
+        float rbBX = rbB.transform.position.x;
+        float rbBY = rbB.transform.position.y;
 
-        AABB shapeA = (AABB) rbA.getShape();
-        AABB shapeB = (AABB) rbB.getShape();
+        AABB shapeA = (AABB) rbA.transform.shape;
+        AABB shapeB = (AABB) rbB.transform.shape;
 
         //Find the overlop between the two bodies
-        float overlapX = Math.abs(Math.min(rbAX + shapeA.getWidth() - rbBX, rbBX + shapeB.getWidth() - rbAX));
-        float overlapY = Math.abs(Math.min(rbAY + shapeA.getHeight() - rbBY, rbBY + shapeB.getHeight() - rbAY));
+        float overlapX = Math.abs(Math.min(rbAX + shapeA.getWidth() - rbBX, rbBX + shapeB.getWidth() - rbAX)) + 0.5f;
+        float overlapY = Math.abs(Math.min(rbAY + shapeA.getHeight() - rbBY, rbBY + shapeB.getHeight() - rbAY)) + 0.5f;
 
         //determine the shortest overlap and calculate minimum translation vector
         Vector2f mtv;
@@ -69,33 +106,47 @@ public class PhysicsWorld {
             mtv = new Vector2f(overlapX, 0);
 
             if (rbAX < rbBX) {
-                rbA.getPosition().sub(mtv);
+                rbA.transform.position.sub(mtv);
             } else {
-                rbA.getPosition().add(mtv);
+                rbA.transform.position.add(mtv);
             }
+            return new Vector2f(overlapX / Math.abs(overlapX), 0);
 
         } else {
             mtv = new Vector2f(0, overlapY);
 
             if (rbAY < rbBY) {
-                rbA.getPosition().sub(mtv);
+                rbA.transform.position.sub(mtv);
             } else {
-                rbB.getPosition().add(mtv);
+                rbB.transform.position.add(mtv);
             }
+            return new Vector2f(0, overlapY / Math.abs(overlapY));
         }
     }
 
-    public void resolveImpulse(RigidBody rbA, RigidBody rbB) {
+    private void checkBounds(RigidBody body) {
+        Vector2f position = body.transform.position;
 
-        //TODO: Collision logic, Add the velocities of two bodies, apply force on to the bodies
+        // Screen dimensions
+        float screenWidth = 1920;
+        float screenHeight = 1080;
 
+        // Wrap around horizontally
+        if (position.x < 0) {
+            position.x += screenWidth;
+        } else if (position.x >= screenWidth) {
+            position.x -= screenWidth;
+        }
 
-    }
+        // Wrap around vertically
+        if (position.y < 0) {
+            position.y += screenHeight;
+        } else if (position.y >= screenHeight) {
+            position.y -= screenHeight;
+        }
 
-    /*
-     * Apply forces to rigid bodies (collision, gravity etc)
-     */
-    public void forceDetection() {
+        // Set the new position back to the body
+        body.transform.position.set(position);
 
     }
 }

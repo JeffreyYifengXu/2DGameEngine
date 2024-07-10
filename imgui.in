@@ -4,8 +4,8 @@ Size=1920,1080
 Collapsed=0
 
 [Window][test window]
-Pos=8,36
-Size=1904,238
+Pos=395,36
+Size=1517,238
 Collapsed=0
 DockId=0x00000002,0
 
@@ -26,8 +26,8 @@ Size=1920,1080
 Collapsed=0
 
 [Window][Game view window]
-Pos=8,276
-Size=1904,796
+Pos=395,276
+Size=1517,796
 Collapsed=0
 DockId=0x00000004,0
 
@@ -38,9 +38,9 @@ Collapsed=0
 DockId=0x00000001,0
 
 [Window][Level Editor utilities]
-Pos=24,301
+Pos=164,404
 Size=593,518
-Collapsed=0
+Collapsed=1
 
 [Docking][Data]
 DockSpace       ID=0xFE0324EA Window=0x9A404470 Pos=8,36 Size=1904,1036 Split=X

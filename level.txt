@@ -77,7 +77,7 @@
             "x": 32.0,
             "y": 32.0
           },
-          "rotation": 0.0,
+          "rotation": 1.0,
           "zIndex": 0,
           "uid": 26
         }
