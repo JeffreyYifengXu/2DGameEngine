@@ -159,11 +159,11 @@ public class PhysicsSim {
     }
 
     public void initWorld() {
-        int numOfbodies = 10;
+        int numOfbodies = 2;
         Random random = new Random();
 
         for (int i=0; i < numOfbodies; i++) {
-            Vector2f pos = new Vector2f(random.nextInt(width - 600), random.nextInt(height - 300));
+            Vector2f pos = new Vector2f(random.nextInt(width), 500);
             RigidBody body = new RigidBody(pos, 1f, new AABB(32, 32), false);
 
             AABB shape = (AABB)body.transform.shape;

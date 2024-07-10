@@ -41,7 +41,7 @@ public class RigidBody extends Component{
     }
 
     public void applyForce(Vector2f val) {
-        this.transform.acceleration = val;
+        this.transform.acceleration.add(val);
     }
 
     public void updateVertices() {

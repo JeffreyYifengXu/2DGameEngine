@@ -6,7 +6,6 @@ import physicsEngine2D.primitives.AABB;
 import physicsEngine2D.primitives.RigidBody;
 
 public class CollisionDetector {
-    
     /*
      * detect collision between two axis aligned boxes without rotation
      */
@@ -61,7 +60,7 @@ public class CollisionDetector {
 
             //Structure of the returned array: {minimum, maximum}
             //Compare the min-max of A and B, if true, there is a separation
-            if (minMaxA[0] > minMaxB[1] || minMaxB[0] > minMaxA[1]) {
+            if (minMaxA[0] > minMaxB[  1] || minMaxB[0] > minMaxA[1]) {
                 return null;
             }
 
@@ -91,8 +90,8 @@ public class CollisionDetector {
         //Check which side the axis we are on
         Vector2f posA = rbA.getCenter();
         Vector2f posB = rbB.getCenter();
-
         Vector2f direction = new Vector2f(posB).sub(posA);
+
         if (direction.dot(normal) < 0) {
             return new CollisionHelper(normal.negate(), depth);
         } else {
@@ -102,26 +101,41 @@ public class CollisionDetector {
 
     /**
      * Realistically resolve collision between two bodies
-     * @param rbA
-     * @param rbB
+     * @param bodyA
+     * @param bodyB
      * @param normal
      * @param depth
      */
     public static void resolveCollision(RigidBody rbA, RigidBody rbB, Vector2f normal, float depth) {
         Vector2f relativeVel = new Vector2f(rbB.transform.velocity).sub(rbA.transform.velocity);
+        System.out.println("Relative velocity: " + relativeVel);
+        System.out.println("normal: " + normal);
 
+        // //Do nothing if two blocks are already moving away from each other
+        // if (relativeVel.dot(normal) > 0.0f) {
+        //     return;
+        // }
         float e = Math.min(rbB.transform.restitution, rbA.transform.restitution);
-        float j = -(1f + e) * relativeVel.dot(normal);
-        j /= (1f / rbA.transform.mass) + (1f / rbB.transform.mass);
+        System.out.println("e: " + e);
 
-
+        float j = (-(1.0f + e) * relativeVel.dot(normal));
+        j = j / ((1f / rbA.transform.mass) + (1f / rbB.transform.mass));
+        System.out.println("j: " + j);
+ 
         Vector2f impulseA =  new Vector2f(normal).mul(j / rbA.transform.mass);
         Vector2f impulseB =  new Vector2f(normal).mul(j / rbB.transform.mass);
 
-        // rbA.transform.velocity.sub(impulseA);
-        // rbB.transform.velocity.add(impulseB);
-        rbA.applyForce(impulseA.negate());
-        rbB.applyForce(impulseB);
+        System.out.println("Collision occured");
+        System.out.println("Impulse: " + impulseA);
+        System.out.println("         " + impulseB );
+
+        //Convert impulse to acceleration
+        rbA.applyForce(impulseA.negate().div(rbA.transform.mass));
+        rbB.applyForce(impulseB.div(rbB.transform.mass));
+    }
+
+    public static void iterImpulseResolution(RigidBody rbA, RigidBody rbB, Vector2f normal, float depth) {
+
     }
 
     /*
@@ -143,7 +157,10 @@ public class CollisionDetector {
                 vals[1] = projection;
             }
         }
-
         return vals;
     }
 }
+
+
+
+

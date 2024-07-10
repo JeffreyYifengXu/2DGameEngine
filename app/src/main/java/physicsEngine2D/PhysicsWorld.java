@@ -63,14 +63,17 @@ public class PhysicsWorld {
 
                 CollisionHelper vals = CollisionDetector.polygonCollision(rbA, rbB);
                 if (vals != null) {
+                    System.out.println("Velocities: " + rbA.transform.velocity);
+                    System.out.println("            " + rbB.transform.velocity + "\n");
+
                     Vector2f normal = vals.getNormal();
                     float depth = vals.getdepth();
 
                     rbA.changeColour(1, 0f, 0f);
                     rbB.changeColour(1, 0f, 0f);
 
-                    rbA.move(new Vector2f(normal).mul(depth / 2f).negate());
-                    rbB.move(normal.mul(depth / 2f));
+                    rbA.move(new Vector2f(normal).mul(depth / 2f + 1).negate());
+                    rbB.move(new Vector2f(normal).mul(depth / 2f + 1));
 
                     CollisionDetector.resolveCollision(rbA, rbB, normal, depth);
                 }

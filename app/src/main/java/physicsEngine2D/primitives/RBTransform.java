@@ -9,7 +9,7 @@ public class RBTransform {
     public Vector2f acceleration = new Vector2f();
     public Vector2f force = new Vector2f();
 
-    public float restitution = 0;
+    public float restitution = 1;
     public float mass;
     public Shape shape;
 
@@ -20,9 +20,5 @@ public class RBTransform {
         this.position = position;
         this.mass = mass;
         this.shape = shape;
-    }
-
-    public void setAcceleration(Vector2f acc) {
-        this.acceleration = new Vector2f(acc);
     }
 }
