@@ -159,14 +159,30 @@ public class PhysicsSim {
     }
 
     public void initWorld() {
-        int numOfbodies = 2;
+        int numOfbodies = 10;
         Random random = new Random();
 
-        for (int i=0; i < numOfbodies; i++) {
-            Vector2f pos = new Vector2f(random.nextInt(width), 500);
-            RigidBody body = new RigidBody(pos, 1f, new AABB(32, 32), false);
+        // Vector2f pos = new Vector2f(random.nextInt(width - 300), random.nextInt(height - 500));
+        Vector2f pos = new Vector2f(500, random.nextInt(height - 500));
 
-            AABB shape = (AABB)body.transform.shape;
+        RigidBody body = new RigidBody(pos, 1f, new AABB(32, 32), false);
+        AABB shape = (AABB)body.transform.shape;
+        shape.setVertices(pos);
+        body.changeColour(0, 1, 0);
+
+        world.addBody(body);
+
+
+
+        for (int i=0; i < numOfbodies; i++) {
+            boolean isStatic = randomBool();
+
+            pos = new Vector2f(random.nextInt(width - 300), random.nextInt(height - 500));
+            // pos = new Vector2f(500, random.nextInt(height - 500));
+            // body = new RigidBody(pos, (float)Math.random() * 5, new AABB(32, 32), false);
+            body = new RigidBody(pos, 1f, new AABB(32, 32), isStatic);
+
+            shape = (AABB)body.transform.shape;
             shape.setVertices(pos);
 
             world.addBody(body);
@@ -249,5 +265,18 @@ public class PhysicsSim {
 
     public static void setHeight(int newHeight) {
         get().height = newHeight;
+    }
+
+
+    //Debug functions --------------------
+    private boolean randomBool() {
+        double random = Math.random();
+
+        if (random > 0.7f) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

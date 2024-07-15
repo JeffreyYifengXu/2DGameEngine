@@ -46,8 +46,6 @@ public class CollisionDetector {
         Vector2f normal = new Vector2f();
         float depth = Float.MAX_VALUE;
 
-        Boolean flipDirection = false;
-
         for (int i=0; i < verticesA.length; i++) { //For verticesA
             Vector2f va = new Vector2f(verticesA[i]);
             Vector2f vb = new Vector2f(verticesA[(i + 1) % verticesA.length]);
@@ -108,30 +106,25 @@ public class CollisionDetector {
      */
     public static void resolveCollision(RigidBody rbA, RigidBody rbB, Vector2f normal, float depth) {
         Vector2f relativeVel = new Vector2f(rbB.transform.velocity).sub(rbA.transform.velocity);
-        System.out.println("Relative velocity: " + relativeVel);
-        System.out.println("normal: " + normal);
+        float invMassA = rbA.getInverseMass();
+        float invMassB = rbB.getInverseMass();
 
         // //Do nothing if two blocks are already moving away from each other
-        // if (relativeVel.dot(normal) > 0.0f) {
-        //     return;
-        // }
+        if (relativeVel.dot(normal) > 0.0f) {
+            return;
+        }
+
+        //impulse calculation
         float e = Math.min(rbB.transform.restitution, rbA.transform.restitution);
-        System.out.println("e: " + e);
-
         float j = (-(1.0f + e) * relativeVel.dot(normal));
-        j = j / ((1f / rbA.transform.mass) + (1f / rbB.transform.mass));
-        System.out.println("j: " + j);
+        j = j / (invMassA + invMassB);
  
-        Vector2f impulseA =  new Vector2f(normal).mul(j / rbA.transform.mass);
-        Vector2f impulseB =  new Vector2f(normal).mul(j / rbB.transform.mass);
+        Vector2f impulseA =  new Vector2f(normal).mul(j * invMassA);
+        Vector2f impulseB =  new Vector2f(normal).mul(j * invMassB);
 
-        System.out.println("Collision occured");
-        System.out.println("Impulse: " + impulseA);
-        System.out.println("         " + impulseB );
-
-        //Convert impulse to acceleration
-        rbA.applyForce(impulseA.negate().div(rbA.transform.mass));
-        rbB.applyForce(impulseB.div(rbB.transform.mass));
+        //Convert impulse to acceleration (divide impulse by mass)
+        rbA.applyForce(impulseA.negate().mul(invMassA));
+        rbB.applyForce(impulseB.mul(invMassB));
     }
 
     public static void iterImpulseResolution(RigidBody rbA, RigidBody rbB, Vector2f normal, float depth) {

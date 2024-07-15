@@ -63,18 +63,15 @@ public class PhysicsWorld {
 
                 CollisionHelper vals = CollisionDetector.polygonCollision(rbA, rbB);
                 if (vals != null) {
-                    System.out.println("Velocities: " + rbA.transform.velocity);
-                    System.out.println("            " + rbB.transform.velocity + "\n");
-
                     Vector2f normal = vals.getNormal();
                     float depth = vals.getdepth();
 
                     rbA.changeColour(1, 0f, 0f);
                     rbB.changeColour(1, 0f, 0f);
 
-                    rbA.move(new Vector2f(normal).mul(depth / 2f + 1).negate());
-                    rbB.move(new Vector2f(normal).mul(depth / 2f + 1));
-
+                    positionCorrection(rbA, rbB, normal, depth);
+                    // rbA.move(new Vector2f(normal).mul(depth / 2f + 1).negate());
+                    // rbB.move(new Vector2f(normal).mul(depth / 2f + 1));
                     CollisionDetector.resolveCollision(rbA, rbB, normal, depth);
                 }
             }
@@ -90,43 +87,19 @@ public class PhysicsWorld {
     /*
      * Correct two objects position to avoid overlapping after collision
      */
-    public Vector2f positionCorrection(RigidBody rbA, RigidBody rbB) {
-        float rbAX = rbA.transform.position.x;
-        float rbAY = rbA.transform.position.y;
-        float rbBX = rbB.transform.position.x;
-        float rbBY = rbB.transform.position.y;
-
-        AABB shapeA = (AABB) rbA.transform.shape;
-        AABB shapeB = (AABB) rbB.transform.shape;
-
-        //Find the overlop between the two bodies
-        float overlapX = Math.abs(Math.min(rbAX + shapeA.getWidth() - rbBX, rbBX + shapeB.getWidth() - rbAX)) + 0.5f;
-        float overlapY = Math.abs(Math.min(rbAY + shapeA.getHeight() - rbBY, rbBY + shapeB.getHeight() - rbAY)) + 0.5f;
-
-        //determine the shortest overlap and calculate minimum translation vector
-        Vector2f mtv;
-        if (overlapX < overlapY) {
-            mtv = new Vector2f(overlapX, 0);
-
-            if (rbAX < rbBX) {
-                rbA.transform.position.sub(mtv);
-            } else {
-                rbA.transform.position.add(mtv);
-            }
-            return new Vector2f(overlapX / Math.abs(overlapX), 0);
-
+    private void positionCorrection(RigidBody rbA, RigidBody rbB, Vector2f normal, float depth) {
+        if (rbA.isStatic()) {
+            rbB.move(new Vector2f(normal).mul(depth).negate());
+        } else if (rbB.isStatic()) {
+            rbA.move(new Vector2f(normal).mul(depth).negate());
         } else {
-            mtv = new Vector2f(0, overlapY);
-
-            if (rbAY < rbBY) {
-                rbA.transform.position.sub(mtv);
-            } else {
-                rbB.transform.position.add(mtv);
-            }
-            return new Vector2f(0, overlapY / Math.abs(overlapY));
+            rbA.move(new Vector2f(normal).mul(depth / 2f + 1).negate());
+            rbB.move(new Vector2f(normal).mul(depth / 2f + 1));
         }
+       
     }
 
+    //Debug functions ------------------------------------------------------------
     private void checkBounds(RigidBody body) {
         Vector2f position = body.transform.position;
 

@@ -12,16 +12,29 @@ public class RigidBody extends Component{
     private boolean updateTransformRequired;
 
     private float[] colour;
+    private float[] originalColour;
 
     public RigidBody(Vector2f position, float mass, Shape shape, boolean isStatic) {
-        this.transform = new RBTransform(position, mass, shape, 0);
         this.isStatic = isStatic;
         this.updateTransformRequired = true;
-        this.colour = new float[] {0.0f, 1.0f, 1.0f};
+
+        if (isStatic) {
+            this.transform = new RBTransform(position, 0, shape, 0);
+            this.colour = new float[] {1.0f, 0f, 0f};
+            this.originalColour = new float[] {1.0f, 0f, 0f};
+        } else {
+            this.transform = new RBTransform(position, mass, shape, 0);
+            this.colour = new float[] {0.0f, 1.0f, 1.0f};
+            this.originalColour = new float[] {0.0f, 1.0f, 1.0f};
+        }
     }
 
     //Using euler's method
     public void step(float dt) {
+        if (this.isStatic) { //do not move if object is static (i.e. immovable)
+            return;
+        }
+
         this.transform.velocity.add(transform.acceleration); //update velocity
         this.transform.position.add(transform.velocity);
         this.transform.rotation += this.transform.rotationVelocity * dt;
@@ -73,8 +86,8 @@ public class RigidBody extends Component{
         this.updateTransformRequired = false;
     }
 
-    //---------------------------------------------------------------------------------------
 
+    //---------------------------------------------------------------------------------------
     public void resetRotation() {
         this.transform.rotation = 0;
     }
@@ -88,10 +101,18 @@ public class RigidBody extends Component{
     }
 
     public void resetColour() {
-        this.colour = new float[] {0, 1f, 1f};
+        this.colour = originalColour;
     }
 
     public Vector2f getCenter() {
         return new Vector2f(this.transform.position).add(16, 16);
+    }
+
+    public float getInverseMass() {
+        return transform.inverseMass;
+    }
+
+    public boolean isStatic() {
+        return this.isStatic;
     }
 }

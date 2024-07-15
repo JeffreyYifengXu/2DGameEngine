@@ -11,6 +11,7 @@ public class RBTransform {
 
     public float restitution = 1;
     public float mass;
+    public float inverseMass;
     public Shape shape;
 
     public float rotation = 0f;
@@ -18,7 +19,12 @@ public class RBTransform {
 
     public RBTransform(Vector2f position, float mass, Shape shape, double angle) {
         this.position = position;
-        this.mass = mass;
         this.shape = shape;
+        this.mass = mass;
+        if (mass != 0) {
+            this.inverseMass = 1f / mass;
+        } else {
+            this.inverseMass = 0;
+        }
     }
 }
