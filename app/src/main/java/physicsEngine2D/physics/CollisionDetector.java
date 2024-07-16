@@ -2,35 +2,9 @@ package physicsEngine2D.physics;
 
 import org.joml.Vector2f;
 
-import physicsEngine2D.primitives.AABB;
 import physicsEngine2D.primitives.RigidBody;
 
 public class CollisionDetector {
-    /*
-     * detect collision between two axis aligned boxes without rotation
-     */
-    public static boolean AABBCollision(RigidBody rbA, RigidBody rbB) {
-
-        float rbAX = rbA.transform.position.x;
-        float rbAY = rbA.transform.position.y;
-        float rbBX = rbB.transform.position.x;
-        float rbBY = rbB.transform.position.y;
-
-        AABB shapeB = (AABB) rbB.transform.shape;
-        AABB shapeA = (AABB) rbA.transform.shape;
-
-        boolean collisionX = (rbAX + shapeA.getWidth())> rbBX && //X axis collision rbA on the left
-                             (rbAX < rbBX + shapeB.getWidth()) ||
-                             (rbBX + shapeA.getWidth())> rbAX && //rbB on the lft
-                             (rbBX < rbAX + shapeB.getWidth());
-
-        boolean collisionY = rbAY < (rbBY + shapeB.getHeight()) && //rbA on top
-                             rbBY < (rbAY + shapeA.getHeight()) ||
-                             rbBY < (rbAY + shapeB.getHeight()) && //rbB on top
-                             rbAY < (rbBY + shapeA.getHeight());
-        
-        return collisionX && collisionY; // Collision condition is satisfied when both x and y axis of two bodies intersect.
-    }
 
     /**
      * Collision detection using separating axis theorem. 
@@ -80,7 +54,7 @@ public class CollisionDetector {
             float[] minMaxA = CollisionDetector.projectVertices(verticesA, axis); //get projection for polygon A
             float[] minMaxB = CollisionDetector.projectVertices(verticesB, axis); //get projection for polygon B
 
-            if (minMaxA[0] >= minMaxB[1] || minMaxB[0] >= minMaxA[1]) {
+            if (minMaxA[0] > minMaxB[1] || minMaxB[0] > minMaxA[1]) {
                 return null;
             }
         }
@@ -119,12 +93,13 @@ public class CollisionDetector {
         float j = (-(1.0f + e) * relativeVel.dot(normal));
         j = j / (invMassA + invMassB);
  
-        Vector2f impulseA =  new Vector2f(normal).mul(j * invMassA);
-        Vector2f impulseB =  new Vector2f(normal).mul(j * invMassB);
+        Vector2f impulseA =  new Vector2f(normal).mul(j);
+        Vector2f impulseB =  new Vector2f(normal).mul(j );
 
-        //Convert impulse to acceleration (divide impulse by mass)
-        rbA.applyForce(impulseA.negate().mul(invMassA));
-        rbB.applyForce(impulseB.mul(invMassB));
+        // rbA.applyForce(impulseA.negate().mul(invMassA));
+        // rbB.applyForce(impulseB.mul(invMassB));
+        rbA.transform.velocity.add(impulseA.negate().mul(invMassA));
+        rbB.transform.velocity.add(impulseB.mul(invMassB));
     }
 
     public static void iterImpulseResolution(RigidBody rbA, RigidBody rbB, Vector2f normal, float depth) {

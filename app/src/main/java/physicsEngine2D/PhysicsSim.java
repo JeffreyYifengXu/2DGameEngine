@@ -64,7 +64,7 @@ import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 
 import engine.KeyListener;
 import engine.MouseListener;
-import physicsEngine2D.primitives.AABB;
+import physicsEngine2D.primitives.Polygon;
 import physicsEngine2D.primitives.RigidBody;
 
 public class PhysicsSim {
@@ -159,33 +159,31 @@ public class PhysicsSim {
     }
 
     public void initWorld() {
-        int numOfbodies = 10;
-        Random random = new Random();
-
-        // Vector2f pos = new Vector2f(random.nextInt(width - 300), random.nextInt(height - 500));
-        Vector2f pos = new Vector2f(500, random.nextInt(height - 500));
-
-        RigidBody body = new RigidBody(pos, 1f, new AABB(32, 32), false);
-        AABB shape = (AABB)body.transform.shape;
-        shape.setVertices(pos);
-        body.changeColour(0, 1, 0);
-
-        world.addBody(body);
+        //Make ground bodies
+        Vector2f groundPos = new Vector2f(500, 900);
+        RigidBody ground = new RigidBody(groundPos, 1, new Polygon(32 * 400, 32), true);
+        Polygon shape = (Polygon)ground.transform.shape;
+        shape.setVertices(groundPos);
 
 
 
+        world.addBody(ground);
+
+        int numOfbodies = 5;
+        float yPos = 400;
         for (int i=0; i < numOfbodies; i++) {
-            boolean isStatic = randomBool();
 
-            pos = new Vector2f(random.nextInt(width - 300), random.nextInt(height - 500));
+            Vector2f pos = new Vector2f(600, yPos);
             // pos = new Vector2f(500, random.nextInt(height - 500));
             // body = new RigidBody(pos, (float)Math.random() * 5, new AABB(32, 32), false);
-            body = new RigidBody(pos, 1f, new AABB(32, 32), isStatic);
+            RigidBody body = new RigidBody(pos, 10f, new Polygon(32, 32), false);
 
-            shape = (AABB)body.transform.shape;
+            shape = (Polygon)body.transform.shape;
             shape.setVertices(pos);
 
             world.addBody(body);
+
+            yPos += 200;
         }
     }
 
@@ -193,7 +191,7 @@ public class PhysicsSim {
         //setup delta time variable
         float beginTime = (float)glfwGetTime();
         float endTime;;
-        float dt = -1.0f;
+        float dt = 0.0f;
 
         while (!glfwWindowShouldClose(glfwWindow)) {
 
@@ -202,10 +200,12 @@ public class PhysicsSim {
             glClearColor(0.3f, 0.3f, 0.3f, 0.3f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            controllerUpdate(dt);
-            world.update(dt);
-     
-            render();
+            if (dt > 0) {
+                controllerUpdate(dt);
+                world.update(dt);
+        
+                render();
+            }
 
             glfwSwapBuffers(glfwWindow);
 
@@ -221,10 +221,10 @@ public class PhysicsSim {
             glColor3f(colour[0], colour[1], colour[2]);
 
             Vector2f pos = body.transform.position;
-            AABB shape = (AABB)body.transform.shape;
+            Polygon shape = (Polygon)body.transform.shape;
             Vector2f[] vertices = shape.vertices;
 
-            if (body.transform.shape.getClass() == AABB.class) {
+            if (body.transform.shape.getClass() == Polygon.class) {
                 glBegin(GL_QUADS);
                 for (int i=0; i < 4; i++) {
                     glVertex2f(vertices[i].x, vertices[i].y);
@@ -235,12 +235,12 @@ public class PhysicsSim {
     }
 
     public void controllerUpdate(float dt) {
-        RigidBody playerBody = world.bodies.get(0);
+        RigidBody playerBody = world.bodies.get(1);
 
         float dx = 0;
         float dy = 0;
 
-        float forceMagnitude = 4;
+        float forceMagnitude = 16;
 
         if (KeyListener.isKeyPressed(GLFW_KEY_UP)) {
             dy--;
@@ -280,3 +280,6 @@ public class PhysicsSim {
         }
     }
 }
+
+
+

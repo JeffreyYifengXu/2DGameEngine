@@ -7,8 +7,7 @@ import org.joml.Vector2f;
 
 import physicsEngine2D.physics.CollisionDetector;
 import physicsEngine2D.physics.CollisionHelper;
-import physicsEngine2D.physics.Collisions;
-import physicsEngine2D.primitives.AABB;
+import physicsEngine2D.primitives.Polygon;
 import physicsEngine2D.primitives.RigidBody;
 
 public class PhysicsWorld {
@@ -19,7 +18,7 @@ public class PhysicsWorld {
     private static float timeElapsed = 0;
 
     public PhysicsWorld() {
-        this.gravity = new Vector2f(0, -10); //Default gravity
+        this.gravity = new Vector2f(0, 9.8f); //Default gravity
     }
 
     public PhysicsWorld(float gravity) {
@@ -47,7 +46,9 @@ public class PhysicsWorld {
         //Integration step
         for (int i=0; i < size; i++) {
             RigidBody body = bodies.get(i);
-            body.step(dt);
+            body.applyForce(new Vector2f(gravity).mul(dt)); //Add gravity to objects
+            // body.step(dt);
+            body.vertletStep(dt);
 
             body.resetColour();
             body.updateVertices();
@@ -61,23 +62,24 @@ public class PhysicsWorld {
             for (int j= i+1; j < size; j++) {
                 RigidBody rbB = bodies.get(j);
 
+                if (rbA.isStatic() && rbB.isStatic()) { //do not need to check collision between two static bodies
+                    continue;
+                }
+
                 CollisionHelper vals = CollisionDetector.polygonCollision(rbA, rbB);
                 if (vals != null) {
                     Vector2f normal = vals.getNormal();
                     float depth = vals.getdepth();
 
-                    rbA.changeColour(1, 0f, 0f);
-                    rbB.changeColour(1, 0f, 0f);
+                    // rbA.changeColour(1, 0f, 0f);
+                    // rbB.changeColour(1, 0f, 0f);
 
                     positionCorrection(rbA, rbB, normal, depth);
-                    // rbA.move(new Vector2f(normal).mul(depth / 2f + 1).negate());
-                    // rbB.move(new Vector2f(normal).mul(depth / 2f + 1));
                     CollisionDetector.resolveCollision(rbA, rbB, normal, depth);
                 }
             }
         }
 
-        //Reset acceleration of all bodies to zero
         for (int i=0; i < size; i++) {
             //ensure the body wraps around the screen
             checkBounds(bodies.get(i));
@@ -89,12 +91,14 @@ public class PhysicsWorld {
      */
     private void positionCorrection(RigidBody rbA, RigidBody rbB, Vector2f normal, float depth) {
         if (rbA.isStatic()) {
-            rbB.move(new Vector2f(normal).mul(depth).negate());
+            rbB.move(new Vector2f(normal).mul(depth));
+            // rbB.transform.velocity = new Vector2f();
         } else if (rbB.isStatic()) {
             rbA.move(new Vector2f(normal).mul(depth).negate());
+            // rbA.transform.velocity = new Vector2f();
         } else {
-            rbA.move(new Vector2f(normal).mul(depth / 2f + 1).negate());
-            rbB.move(new Vector2f(normal).mul(depth / 2f + 1));
+            rbA.move(new Vector2f(normal).mul(depth / 2f).negate());
+            rbB.move(new Vector2f(normal).mul(depth / 2f));
         }
        
     }

@@ -2,29 +2,18 @@ package physicsEngine2D.primitives;
 
 import org.joml.Vector2f;
 
-public class AABB extends Shape{
+public class AABB {
 
-    private int width;
-    private int height;
+    public Vector2f min;
+    public Vector2f max;
 
-    public AABB(int width, int height) {
-        this.width = width;
-        this.height = height;
-        this.vertices = new Vector2f[4];
+    public AABB(Vector2f max, Vector2f min) {
+        this.max = max;
+        this.min = min;
     }
 
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setVertices(Vector2f pos) {
-        this.vertices[0] = new Vector2f(pos);
-        this.vertices[1] = new Vector2f(pos.x + width, pos.y);
-        this.vertices[2] = new Vector2f(pos.x + width, pos.y + height);
-        this.vertices[3] = new Vector2f(pos.x, pos.y + height);
+    public AABB(float maxX, float maxY, float minX, float minY) {
+        this.max = new Vector2f(maxX, maxY);
+        this.min = new Vector2f(minX, minY);
     }
 }

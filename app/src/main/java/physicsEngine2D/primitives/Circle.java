@@ -11,8 +11,15 @@ public class Circle extends Shape {
         this.radius = radius;
     }
 
+    @Override
     public void setVertices(Vector2f pos) {
         this.centre = pos;
+    }
+
+    @Override
+    public AABB getAABB() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAABB'");
     }
     
 }

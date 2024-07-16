@@ -20,8 +20,8 @@ public class RigidBody extends Component{
 
         if (isStatic) {
             this.transform = new RBTransform(position, 0, shape, 0);
-            this.colour = new float[] {1.0f, 0f, 0f};
-            this.originalColour = new float[] {1.0f, 0f, 0f};
+            this.colour = new float[] {0f, 0.7f, 0f};
+            this.originalColour = new float[] {0f, 0.7f, 0f};
         } else {
             this.transform = new RBTransform(position, mass, shape, 0);
             this.colour = new float[] {0.0f, 1.0f, 1.0f};
@@ -29,6 +29,7 @@ public class RigidBody extends Component{
         }
     }
 
+    //----------------------------------integration step--------------------------------------------
     //Using euler's method
     public void step(float dt) {
         if (this.isStatic) { //do not move if object is static (i.e. immovable)
@@ -40,6 +41,21 @@ public class RigidBody extends Component{
         this.transform.rotation += this.transform.rotationVelocity * dt;
         this.updateTransformRequired = true;
 
+        //Reset acceleration to zero
+        this.transform.acceleration = new Vector2f();
+    }
+
+    public void vertletStep(float dt) {
+        if (this.isStatic) {
+            return;
+        }
+
+        this.transform.position.add(transform.velocity.add(transform.acceleration.mul(0.5f)));
+        this.transform.velocity.add(transform.acceleration.mul(0.5f));
+
+        this.updateTransformRequired = true;
+
+        //Reset acceleration to zero
         this.transform.acceleration = new Vector2f();
     }
     
@@ -54,18 +70,20 @@ public class RigidBody extends Component{
     }
 
     public void applyForce(Vector2f val) {
-        this.transform.acceleration.add(val);
+        if (!isStatic) {
+            this.transform.acceleration.add(val);
+        }
     }
 
     public void updateVertices() {
 
         if (updateTransformRequired) {
-            AABB shape = (AABB)transform.shape;
+            Polygon shape = (Polygon)transform.shape;
             Vector2f[] vertices = shape.vertices;
             
             float centerX = (vertices[0].x + vertices[2].x) / 2.0f;
             float centerY = (vertices[0].y + vertices[2].y) / 2.0f;
-
+ 
             float sin = (float)Math.sin(transform.rotation);
             float cos = (float)Math.cos(transform.rotation);
 
@@ -86,8 +104,7 @@ public class RigidBody extends Component{
         this.updateTransformRequired = false;
     }
 
-
-    //---------------------------------------------------------------------------------------
+    //---------------------------------getters and setters------------------------------------------------
     public void resetRotation() {
         this.transform.rotation = 0;
     }
@@ -115,4 +132,10 @@ public class RigidBody extends Component{
     public boolean isStatic() {
         return this.isStatic;
     }
+
+    public AABB getAABB() {
+        return this.transform.shape.getAABB();
+    }
 }
+
+
