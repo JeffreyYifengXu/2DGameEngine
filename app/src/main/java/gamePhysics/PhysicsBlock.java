@@ -16,7 +16,7 @@ public class PhysicsBlock extends Component {
     }
     
     public PhysicsBlock(RigidBody rb) {
-        this.rigidBody = rigidBody;
+        this.rigidBody = rb;
     }
 
     @Override
@@ -27,6 +27,8 @@ public class PhysicsBlock extends Component {
 
     public void update(float dt) {
         //TODO: update position of the gameObject according to the rigidBody
+        gameObject.transform.position = this.rigidBody.transform.position;
+        // System.out.println(this.rigidBody.transform.position);
     }
 
     public void destroyRigidBody() {

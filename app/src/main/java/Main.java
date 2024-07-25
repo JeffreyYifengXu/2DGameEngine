@@ -4,10 +4,12 @@ import physicsEngine2D.PhysicsWorld;
 
 public class Main {
     public static void main(String[] args){
-        Window window = Window.get();
-        window.run();
+        // Window window = Window.get();
+        // window.run();
 
-        // PhysicsSim sim = PhysicsSim.get();
-        // sim.run();
+
+        //Uncomment this to play the physics engine!!!
+        PhysicsSim sim = PhysicsSim.get();
+        sim.run();
     }
 }

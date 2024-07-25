@@ -17,6 +17,8 @@ public class GameObject {
     private static int ID_COUNTER = 0;
     private int uid = -1;
 
+    private boolean addPhysicsBlock = false;
+    private boolean isStatic = false;
 
     private String name;
     private List<Component> components;
@@ -164,6 +166,15 @@ public class GameObject {
 
     public boolean doSerialization() {
         return this.serialize;
+    }
+
+    public boolean addPhysicsBlock() {
+        return this.addPhysicsBlock;
+    }
+
+    public void setAddphysicsBlock(boolean bool, boolean isStatic) {
+        this.addPhysicsBlock = bool;
+        this.isStatic = isStatic;
     }
 
 }

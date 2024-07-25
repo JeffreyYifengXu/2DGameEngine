@@ -57,13 +57,13 @@ public class PropertiesWindow {
             if (ImGui.beginPopupContextWindow("Add Component")) {
                 if (ImGui.menuItem("Add static rigidbody")) {
                     if (activeGameObject.getComponent(PhysicsBlock.class) == null) {
-                        activeGameObject.addComponent(new PhysicsBlock(activeGameObject.transform.position, true));
+                        activeGameObject.setAddphysicsBlock(true, true);
                     }
                 }
 
                 if (ImGui.menuItem("Add non-static rigidbody")) {
                     if (activeGameObject.getComponent(PhysicsBlock.class) == null) {
-                        activeGameObject.addComponent(new PhysicsBlock(activeGameObject.transform.position, false));
+                        activeGameObject.setAddphysicsBlock(true, false);
                     }
                 }
 

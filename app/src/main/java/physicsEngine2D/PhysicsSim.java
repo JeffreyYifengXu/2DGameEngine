@@ -159,7 +159,7 @@ public class PhysicsSim {
     }
 
     public void initWorld() {
-        int numOfbodies = 1;
+        int numOfbodies = 6;
         float yPos = 400;
         for (int i=0; i < numOfbodies; i++) {
 
@@ -177,15 +177,27 @@ public class PhysicsSim {
         }
 
         //Make ground bodies
-        int groundLength = 10;
+        int groundLength = 500;
+        int groundHeight = 32;
         Vector2f groundPos = new Vector2f(500, 900);
+        RigidBody ground = new RigidBody(groundPos, 1, new Polygon(groundLength, groundHeight), true);
+        Polygon shape = (Polygon)ground.transform.shape;
+        shape.setVertices(groundPos);
+        world.addBody(ground);
 
-        for (int i=0; i < groundLength; i++){
-            RigidBody ground = new RigidBody(new Vector2f(groundPos.x + 32 * i, groundPos.y), 1, new Polygon(32, 32), true);
-            Polygon shape = (Polygon)ground.transform.shape;
-            shape.setVertices(groundPos);
-            world.addBody(ground);
-        }
+        groundPos = new Vector2f(1200, 400);
+        ground = new RigidBody(groundPos, 1, new Polygon(groundLength, groundHeight), true);
+        shape = (Polygon)ground.transform.shape;
+        shape.setVertices(groundPos);
+        world.addBody(ground);
+
+
+        // for (int i=0; i < groundLength; i++){
+        //     RigidBody ground = new RigidBody(new Vector2f(groundPos.x + 32 * i, groundPos.y), 1, new Polygon(32, 32), true);
+        //     Polygon shape = (Polygon)ground.transform.shape;
+        //     shape.setVertices(groundPos);
+        //     world.addBody(ground);
+        // }
 
     }
 
@@ -242,7 +254,7 @@ public class PhysicsSim {
         float dx = 0;
         float dy = 0;
 
-        float forceMagnitude = 16;
+        float forceMagnitude = 8;
 
         if (KeyListener.isKeyPressed(GLFW_KEY_UP)) {
             dy--;

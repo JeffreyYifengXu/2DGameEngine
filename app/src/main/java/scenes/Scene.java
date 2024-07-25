@@ -62,6 +62,8 @@ public class Scene {
         }
 
         isRunning = true;
+
+        // System.outS.println(this.physicsWorld.);
     }
 
     public void addGameObjectToScene(GameObject go) {
@@ -90,6 +92,13 @@ public class Scene {
         //Currently no updates done to gameobjects
         for (int i=0; i < gameObjects.size(); i++) {
             GameObject go = gameObjects.get(i);
+
+            if (go.addPhysicsBlock()) {
+                System.out.println("This is called");
+                this.physicsWorld.addRigidBody(go, isRunning);
+                go.setAddphysicsBlock(false, true);
+            }
+
             go.editorUpdate(dt);
 
             if (go.isDead()) { //Remove dead game objects
@@ -98,12 +107,15 @@ public class Scene {
                 this.physicsWorld.destroyGameObject(go);
                 i--;
             }
+
+            physicsWorld.update(dt);
         }
+
+        physicsWorld.update(dt);
     }
 
     public void update(float dt) {
         camera.adjustProjection();
-        this.physicsWorld.update(dt);
 
         //Currently no updates done to gameobjects
         for (int i=0; i < gameObjects.size(); i++) {
@@ -117,6 +129,8 @@ public class Scene {
                 i--;
             }
         }
+
+        this.physicsWorld.update(dt); //update physics world
     }
 
     public void render() {

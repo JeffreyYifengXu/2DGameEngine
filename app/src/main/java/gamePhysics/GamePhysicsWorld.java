@@ -12,7 +12,7 @@ import physicsEngine2D.primitives.Shape;
 
 public class GamePhysicsWorld {
 
-    PhysicsWorld world;
+    private PhysicsWorld world;
 
     public GamePhysicsWorld() {
         this.world = new PhysicsWorld();
@@ -37,6 +37,9 @@ public class GamePhysicsWorld {
         //Create the new physicsBlock for integration into the gameEngine
         PhysicsBlock physicsBlock = new PhysicsBlock(rigidBody);
         ob.addComponent(physicsBlock);
+        System.out.println(rigidBody);
+        System.out.println(ob.getAllComponent());
+        System.out.println(world.bodies);
 
     }
 

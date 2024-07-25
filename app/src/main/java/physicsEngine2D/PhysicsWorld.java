@@ -18,7 +18,7 @@ public class PhysicsWorld {
     private float physicsTimeStep = 1.0f / 60.0f;
 
     public PhysicsWorld() {
-        this.gravity = new Vector2f(0, 9.8f); //Default gravity
+        this.gravity = new Vector2f(0, 2f); //Default gravity
     }
 
     public PhysicsWorld(float gravity) {
