@@ -3,7 +3,9 @@ Closely references the steps taken by youtube GamesWithGabe. While lower level f
 such as displaying window and imgui implementation is taken from gameswithgabe. The rest of the
 functionalities (Camera zooming, dragging etc) are implemented by myself while taking snippets of ideas from the tutorial.
 
-Current functionalities
+To switch between game engine and physics engine. Modify the main.java function by commenting out the first two or second two lines
+
+Current functionalities (Game Engine)
 -----------------------------
 
 After compiling through gradle
@@ -14,3 +16,8 @@ An editor window will pop up which allows:
 - Hold middle mouse button to move camera around
 - scroll mouse to zoom in and out
 - Space bar to return to original camera position
+
+(Physics Engine)
+---------------------------
+Use arrow keys to control a block to move around
+- Basic collision, impiluse and gravity implemented.
