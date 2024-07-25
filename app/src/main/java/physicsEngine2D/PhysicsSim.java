@@ -159,17 +159,7 @@ public class PhysicsSim {
     }
 
     public void initWorld() {
-        //Make ground bodies
-        Vector2f groundPos = new Vector2f(500, 900);
-        RigidBody ground = new RigidBody(groundPos, 1, new Polygon(32 * 400, 32), true);
-        Polygon shape = (Polygon)ground.transform.shape;
-        shape.setVertices(groundPos);
-
-
-
-        world.addBody(ground);
-
-        int numOfbodies = 5;
+        int numOfbodies = 1;
         float yPos = 400;
         for (int i=0; i < numOfbodies; i++) {
 
@@ -178,13 +168,25 @@ public class PhysicsSim {
             // body = new RigidBody(pos, (float)Math.random() * 5, new AABB(32, 32), false);
             RigidBody body = new RigidBody(pos, 10f, new Polygon(32, 32), false);
 
-            shape = (Polygon)body.transform.shape;
+            Polygon shape = (Polygon)body.transform.shape;
             shape.setVertices(pos);
 
             world.addBody(body);
 
             yPos += 200;
         }
+
+        //Make ground bodies
+        int groundLength = 10;
+        Vector2f groundPos = new Vector2f(500, 900);
+
+        for (int i=0; i < groundLength; i++){
+            RigidBody ground = new RigidBody(new Vector2f(groundPos.x + 32 * i, groundPos.y), 1, new Polygon(32, 32), true);
+            Polygon shape = (Polygon)ground.transform.shape;
+            shape.setVertices(groundPos);
+            world.addBody(ground);
+        }
+
     }
 
     private void loop() {
@@ -201,8 +203,8 @@ public class PhysicsSim {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             if (dt > 0) {
-                controllerUpdate(dt);
                 world.update(dt);
+                controllerUpdate(world.getPhysicsTime());
         
                 render();
             }
@@ -235,7 +237,7 @@ public class PhysicsSim {
     }
 
     public void controllerUpdate(float dt) {
-        RigidBody playerBody = world.bodies.get(1);
+        RigidBody playerBody = world.bodies.get(0);
 
         float dx = 0;
         float dy = 0;

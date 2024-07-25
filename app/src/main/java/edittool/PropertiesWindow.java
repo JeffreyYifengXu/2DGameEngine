@@ -2,6 +2,7 @@ package edittool;
 
 import engine.GameObject;
 import engine.MouseListener;
+import gamePhysics.PhysicsBlock;
 import imgui.ImGui;
 import renderer.PickingTexture;
 import scenes.Scene;
@@ -41,22 +42,35 @@ public class PropertiesWindow {
             GameObject obOfInterest = currentScene.getGameObject(gameObjectId); 
             activeGameObject = obOfInterest;
             this.clickDuration = 0.2f;
-            
-        } else if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT)) {//Remove an gameObject from the scene
-            int x = (int) MouseListener.getScreenX();
-            int y = (int) MouseListener.getScreenY();
-
-            int gameObjectId = pickingTexture.readPixel(x, y);
-            GameObject obOfInterest = currentScene.getGameObject(gameObjectId);
-
-            currentScene.removeGameObject(obOfInterest);
         }
         activeGameObjectChanged = false;
     }
 
+    /*
+     * 
+     */
     public void imgui() {
         if (activeGameObject != null) {
             ImGui.begin("Properties");
+
+            //Add rigidbody to a gameobject
+            if (ImGui.beginPopupContextWindow("Add Component")) {
+                if (ImGui.menuItem("Add static rigidbody")) {
+                    if (activeGameObject.getComponent(PhysicsBlock.class) == null) {
+                        activeGameObject.addComponent(new PhysicsBlock(activeGameObject.transform.position, true));
+                    }
+                }
+
+                if (ImGui.menuItem("Add non-static rigidbody")) {
+                    if (activeGameObject.getComponent(PhysicsBlock.class) == null) {
+                        activeGameObject.addComponent(new PhysicsBlock(activeGameObject.transform.position, false));
+                    }
+                }
+
+                ImGui.endPopup();
+            }
+
+
             activeGameObject.imgui();
             ImGui.end();
         }

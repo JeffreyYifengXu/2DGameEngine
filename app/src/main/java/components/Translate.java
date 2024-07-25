@@ -86,6 +86,11 @@ public class Translate extends Component{
 
     @Override
     public void update(float dt) {
+        setInvisible();
+    }
+
+    @Override
+    public void editorUpdate(float dt) {
         if (this.activeGameObject != null) { //If there is an active game Object
             //Put the arrows to the active game object
             int activeUid = this.activeGameObject.getUid();

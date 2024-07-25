@@ -60,4 +60,16 @@ public class Renderer {
     public static Shader getBoundShader() {
         return currentShader;
     }
+
+    public void destroyGameObject(GameObject go) {
+        if (go.getComponent(SpriteRenderer.class) == null) {
+            return;
+        }
+
+        for (RenderBatch batch : batches) {
+            if (batch.destroyGameObject(go)) {
+                return;
+            }
+        }
+    }
 }

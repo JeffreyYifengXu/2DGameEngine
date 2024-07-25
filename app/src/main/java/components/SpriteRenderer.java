@@ -28,6 +28,15 @@ public class SpriteRenderer extends Component {
             this.isDirty = true;
         }
     }
+
+    @Override
+    public void editorUpdate(float dt) {
+        boolean unchanged = this.lastTransform.equals(this.gameObject.transform);
+        if (!unchanged) {
+            this.gameObject.transform.copy(this.lastTransform);
+            this.isDirty = true;
+        }
+    }
  
     /**
      * Allows for real time colour change of selected 
@@ -41,6 +50,10 @@ public class SpriteRenderer extends Component {
             this.isDirty = true;
         }
 
+    }
+
+    public void setDirty() {
+        this.isDirty = true;
     }
 
     public Vector4f getColour() {

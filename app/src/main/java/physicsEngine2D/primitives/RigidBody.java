@@ -14,6 +14,8 @@ public class RigidBody extends Component{
     private float[] colour;
     private float[] originalColour;
 
+    private boolean isDead = false;
+
     public RigidBody(Vector2f position, float mass, Shape shape, boolean isStatic) {
         this.isStatic = isStatic;
         this.updateTransformRequired = true;
@@ -24,6 +26,21 @@ public class RigidBody extends Component{
             this.originalColour = new float[] {0f, 0.7f, 0f};
         } else {
             this.transform = new RBTransform(position, mass, shape, 0);
+            this.colour = new float[] {0.0f, 1.0f, 1.0f};
+            this.originalColour = new float[] {0.0f, 1.0f, 1.0f};
+        }
+    }
+
+    public RigidBody(Vector2f position, boolean isStatic) {
+        this.isStatic = isStatic;
+        this.updateTransformRequired = true;
+
+        if (isStatic) {
+            this.transform = new RBTransform(position, 0, new Polygon(32, 32), 0);
+            this.colour = new float[] {0f, 0.7f, 0f};
+            this.originalColour = new float[] {0f, 0.7f, 0f};
+        } else {
+            this.transform = new RBTransform(position, 1, new Polygon(32, 32), 0);
             this.colour = new float[] {0.0f, 1.0f, 1.0f};
             this.originalColour = new float[] {0.0f, 1.0f, 1.0f};
         }
@@ -104,7 +121,15 @@ public class RigidBody extends Component{
         this.updateTransformRequired = false;
     }
 
+    public void destroy() {
+        this.isDead = true;
+    }
+
     //---------------------------------getters and setters------------------------------------------------
+    public boolean isDead() {
+        return this.isDead;
+    }
+    
     public void resetRotation() {
         this.transform.rotation = 0;
     }
@@ -135,6 +160,10 @@ public class RigidBody extends Component{
 
     public AABB getAABB() {
         return this.transform.shape.getAABB();
+    }
+
+    public void setShape(Shape shape) {
+        this.transform.shape = shape;
     }
 }
 

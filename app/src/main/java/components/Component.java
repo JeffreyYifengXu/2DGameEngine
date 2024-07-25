@@ -26,6 +26,10 @@ public abstract class Component {
 
     }
 
+    public void editorUpdate(float dt) {
+        
+    }
+
     /**
      * Expose the variables to imGui. Allowing users to change values using the imgui menu.
      * Allows for real time adjustment of the variables
@@ -115,5 +119,9 @@ public abstract class Component {
      */
     public static void init(int maxId) {
         ID_COUNTER = maxId;
+    }
+
+    public void destroy() {
+        
     }
 }

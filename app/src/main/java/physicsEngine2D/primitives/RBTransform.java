@@ -26,5 +26,7 @@ public class RBTransform {
         } else {
             this.inverseMass = 0;
         }
+
+        shape.setVertices(position);
     }
 }

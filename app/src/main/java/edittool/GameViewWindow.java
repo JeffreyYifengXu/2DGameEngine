@@ -7,16 +7,33 @@ import engine.Window;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiWindowFlags;
+import imgui.internal.ImGuiWindow;
+import observers.EventSystem;
+import observers.events.Event;
+import observers.events.EventType;
 
 public class GameViewWindow {
     
     //Saves the screen coordinates
     private float leftX, rightX, bottomY, topY;
 
+    private boolean play = false;
+
     public void imgui() {
 
-        int windowFlags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse;
+        int windowFlags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse 
+                        | ImGuiWindowFlags.MenuBar;
         ImGui.begin("Game view window", windowFlags);
+
+        ImGui.beginMenuBar();
+        if (ImGui.menuItem("Play", "", play, !play)) {
+            play = true;
+            EventSystem.notify(null, new Event(EventType.GameEngineStart));
+        } if (ImGui.menuItem("Stop", "", !play, play)) {
+            play = false;
+            EventSystem.notify(null, new Event(EventType.GameEngineStop ));
+        }
+        ImGui.endMenuBar();
 
         ImVec2 windowSize = getLargestSizeForViewport();
         ImVec2 windowPos = getCenteredPositionForViewport(windowSize);

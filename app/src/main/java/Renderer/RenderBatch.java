@@ -25,6 +25,7 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import components.SpriteRenderer;
+import engine.GameObject;
 import engine.Window;
 import java.util.List;
 import java.util.ArrayList;
@@ -139,6 +140,25 @@ public class RenderBatch implements Comparable<RenderBatch>{
                 sprites[i++] = sprites[j]; 
             }
         }
+    }
+
+    public boolean destroyGameObject(GameObject go) {
+        SpriteRenderer sprite = go.getComponent(SpriteRenderer.class);
+        for (int i=0; i < numSprites; i++) {
+            if (sprites[i] == sprite) {
+
+                //Remove sprites by over writing everything, move everything backwards in the list
+                for (int j=i; j < numSprites - 1; j++) {
+                    sprites[j] = sprites[j + 1];
+                    sprites[j].setDirty();
+                }
+
+                numSprites --;
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

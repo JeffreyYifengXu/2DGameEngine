@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import components.Component;
+import imgui.ImGui;
 
 /**
  * Represents an in game object. 
@@ -12,6 +13,7 @@ import components.Component;
 
 public class GameObject {
     private boolean serialize = true;
+    private boolean isDead = false;
     private static int ID_COUNTER = 0;
     private int uid = -1;
 
@@ -93,6 +95,12 @@ public class GameObject {
         }
     }
 
+    public void editorUpdate(float dt) {
+        for (int i=0; i < components.size(); i++) {
+            components.get(i).editorUpdate(dt);
+        }
+    }
+
     /**
      * Called once, to initiate all components of current gameobject
      */
@@ -107,7 +115,9 @@ public class GameObject {
      */
     public void imgui() {
         for (Component c : components) {
-            c.imgui(); //Exposes the components variables to the user through imgui
+            if (ImGui.collapsingHeader(c.getClass().getSimpleName())){
+                c.imgui(); //Exposes the components variables to the user through imgui
+            }
         }
     }
 
@@ -115,9 +125,15 @@ public class GameObject {
         return this.name;
     }
 
-    public void getProperties() {
-        System.out.println("name: " + this.name);
-        System.out.println("Position: " + this.transform.position);
+    public void destroy() {
+        this.isDead = true;
+        for (int i=0; i < components.size(); i++) {
+            components.get(i).destroy();
+        }
+    }
+
+    public boolean isDead() {
+        return this.isDead;
     }
 
     public static void init(int maxId) {
@@ -149,4 +165,5 @@ public class GameObject {
     public boolean doSerialization() {
         return this.serialize;
     }
+
 }

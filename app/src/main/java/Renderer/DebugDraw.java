@@ -17,8 +17,8 @@ import static org.lwjgl.opengl.GL20.glDrawArrays;
 import static org.lwjgl.opengl.GL20.glLineWidth;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_LINES;
-
-
+import static org.lwjgl.opengl.GL11.glDrawArrays;
+import static org.lwjgl.opengl.GL11.glLineWidth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -150,5 +150,36 @@ public class DebugDraw {
         }
 
         DebugDraw.lines.add(new Line2D(start, end, colour, lifeTime));
+    }
+
+    public static void addBox2D(Vector2f center, Vector2f dimensions, float rotation) {
+        // TODO: ADD CONSTANTS FOR COMMON COLORS
+        addBox2D(center, dimensions, rotation, new Vector3f(0, 1, 0), 1);
+    }
+
+    public static void addBox2D(Vector2f center, Vector2f dimensions, float rotation, Vector3f color) {
+        addBox2D(center, dimensions, rotation, color, 1);
+    }
+
+    public static void addBox2D(Vector2f center, Vector2f dimensions, float rotation,
+                                Vector3f color, int lifetime) {
+        Vector2f min = new Vector2f(center).sub(new Vector2f(dimensions).mul(0.5f));
+        Vector2f max = new Vector2f(center).add(new Vector2f(dimensions).mul(0.5f));
+
+        Vector2f[] vertices = {
+              new Vector2f(min.x, min.y), new Vector2f(min.x, max.y),
+              new Vector2f(max.x, max.y), new Vector2f(max.x, min.y)
+        };
+
+        // if (rotation != 0.0f) {
+        //     for (Vector2f vert : vertices) {
+        //         Math.rotate(vert, rotation, center);
+        //     }
+        // }
+
+        addLine2D(vertices[0], vertices[1], color, lifetime);
+        addLine2D(vertices[0], vertices[3], color, lifetime);
+        addLine2D(vertices[1], vertices[2], color, lifetime);
+        addLine2D(vertices[2], vertices[3], color, lifetime);
     }
 }

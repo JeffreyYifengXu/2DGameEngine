@@ -4,6 +4,7 @@ import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
 import static org.lwjgl.glfw.GLFW.glfwSetCursor;
 
 import edittool.GameViewWindow;
+import edittool.MenuBar;
 import edittool.PropertiesWindow;
 import imgui.ImFontAtlas;
 import imgui.ImFontConfig;
@@ -44,11 +45,13 @@ public class ImGuiLayer {
     private String glslVersion = "#version 330 core";
 
     private PropertiesWindow propertiesWindow;
+    private MenuBar menuBar;
 
     public ImGuiLayer(long glfwWindow, PickingTexture pickingTexture) {
         this.glfwWindow = glfwWindow;
         this.gameViewWindow = new GameViewWindow();
         this.propertiesWindow = new PropertiesWindow(pickingTexture);
+        this.menuBar = new MenuBar();
     }
 
     public void init() {
@@ -259,6 +262,7 @@ public class ImGuiLayer {
 
         propertiesWindow.update(dt, currentScene);
         propertiesWindow.imgui();
+        menuBar.imgui();
         // ImGui.showDemoWindow();
 
         //Game view port

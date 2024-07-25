@@ -23,14 +23,13 @@ import util.Settings;
  * @author Jeffrey Xu, referencing GamesWithGabe
  */
 
-public class LevelEditorScene extends Scene{
+public class LevelEditorSceneInit extends SceneInit{
 
     private Spritesheet sprites;
     private Spritesheet arrowSpritesheet;
+    private GameObject levelEditorUtil;
 
-    GameObject levelEditorUtil = this.createGameObject("LevelEditor");
-
-    public LevelEditorScene() {
+    public LevelEditorSceneInit() {
 
     }
 
@@ -41,23 +40,25 @@ public class LevelEditorScene extends Scene{
      * Creates the gameObjects: main character, enimies etc.
      */
     @Override
-    public void init() {
-        loadResources();
-        this.camera = new Camera(new Vector2f(-250, 0));
+    public void init(Scene scene) {
         this.sprites = AssetPool.getSpritesheet("tilemap");
         this.arrowSpritesheet = AssetPool.getSpritesheet("arrows");
         
+        this.levelEditorUtil = scene.createGameObject("LevelEditor");
+        levelEditorUtil.setNoSerialize();
         levelEditorUtil.addComponent(new MouseControls());
         levelEditorUtil.addComponent(new GridLines()); 
-        levelEditorUtil.addComponent(new EditorCamera(camera));
+        levelEditorUtil.addComponent(new EditorCamera(scene.camera()));
         levelEditorUtil.addComponent(new Translate(this.arrowSpritesheet, Window.getImGuiLayer().getPropertiesWindow()));
-        levelEditorUtil.start();
+
+        scene.addGameObjectToScene(levelEditorUtil);
     }
 
     /**
      * Load the shader and spritesheet from designated directory
      */
-    private void loadResources() {
+    @Override
+    public void loadResources(Scene scene) {
         System.out.println("\n######################################");
         System.out.println("Loading shader... ");
 
@@ -80,7 +81,7 @@ public class LevelEditorScene extends Scene{
         System.out.println("SpriteSheets successfully loaded\n");
 
         //Ensure each gameobject have unique texture
-        for (GameObject gobj : gameObjects) {
+        for (GameObject gobj : scene.getGameObjects()) {
             if (gobj.getComponent(SpriteRenderer.class) != null) {
 
                 SpriteRenderer spr = gobj.getComponent(SpriteRenderer.class);
@@ -89,25 +90,6 @@ public class LevelEditorScene extends Scene{
                 }
             }
         }
-    }
-
-    /**
-     * The main update function of the game.
-     * Render the sprites and update the gameobjects. Called by the main loop from Window class
-     */
-    @Override
-    public void update(float dt) {
-        levelEditorUtil.update(dt);
-        camera.adjustProjection();
-        //Currently no updates done to gameobjects
-        for (GameObject go: this.gameObjects) {
-            go.update(dt);
-        }
-    }
-
-    @Override
-    public void render() {
-        this.renderer.render();
     }
 
     /**

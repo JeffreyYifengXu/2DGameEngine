@@ -7,7 +7,6 @@ import org.joml.Vector2f;
 
 import physicsEngine2D.physics.CollisionDetector;
 import physicsEngine2D.physics.CollisionHelper;
-import physicsEngine2D.primitives.Polygon;
 import physicsEngine2D.primitives.RigidBody;
 
 public class PhysicsWorld {
@@ -15,7 +14,8 @@ public class PhysicsWorld {
     public List<RigidBody> immovableBodies = new ArrayList<>();
     public Vector2f gravity;
 
-    private static float timeElapsed = 0;
+    private float physicsTime = 0.0f;
+    private float physicsTimeStep = 1.0f / 60.0f;
 
     public PhysicsWorld() {
         this.gravity = new Vector2f(0, 9.8f); //Default gravity
@@ -34,7 +34,12 @@ public class PhysicsWorld {
      * Called in the game engine update loop.
      */
     public void update(float dt) {
-        fixedUpdate(dt);
+        physicsTime += dt;
+
+        if (physicsTime >= 0.0f) {// ensure update physics engine every 60 frames 
+            physicsTime -= physicsTimeStep;
+            fixedUpdate(physicsTime);
+        }
     }
 
     /*
@@ -46,6 +51,12 @@ public class PhysicsWorld {
         //Integration step
         for (int i=0; i < size; i++) {
             RigidBody body = bodies.get(i);
+            if (body.isDead()) {
+                bodies.remove(body);
+                i--;
+                continue;
+            }
+            
             body.applyForce(new Vector2f(gravity).mul(dt)); //Add gravity to objects
             // body.step(dt);
             body.vertletStep(dt);
@@ -71,6 +82,7 @@ public class PhysicsWorld {
                     Vector2f normal = vals.getNormal();
                     float depth = vals.getdepth();
 
+                    //Debug command to check for collisions
                     // rbA.changeColour(1, 0f, 0f);
                     // rbB.changeColour(1, 0f, 0f);
 
@@ -103,6 +115,10 @@ public class PhysicsWorld {
        
     }
 
+    public float getPhysicsTime() {
+        return this.physicsTime;
+    }
+
     //Debug functions ------------------------------------------------------------
     private void checkBounds(RigidBody body) {
         Vector2f position = body.transform.position;
@@ -127,6 +143,6 @@ public class PhysicsWorld {
 
         // Set the new position back to the body
         body.transform.position.set(position);
-
     }
+
 }

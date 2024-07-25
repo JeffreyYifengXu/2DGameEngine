@@ -27,7 +27,7 @@ public class EditorCamera extends Component {
     }
 
     @Override
-    public void update(float dt) {
+    public void editorUpdate(float dt) {
 
         //------------Check Mouse button update -----------------
         if (MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_MIDDLE)) {//If middle button is pressed

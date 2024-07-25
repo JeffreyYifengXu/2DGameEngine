@@ -25,6 +25,9 @@ import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import static org.lwjgl.system.MemoryUtil.NULL;
+
+import java.util.logging.Level;
+
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
@@ -42,20 +45,24 @@ import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
+import observers.EventSystem;
+import observers.Observer;
+import observers.events.Event;
+import observers.events.EventType;
 import renderer.DebugDraw;
 import renderer.Framebuffer;
 import renderer.PickingTexture;
 import renderer.Renderer;
 import renderer.Shader;
-import scenes.LevelEditorScene;
-import scenes.LevelScene;
+import scenes.LevelEditorSceneInit;
 import scenes.Scene;
+import scenes.SceneInit;
 import util.AssetPool;
 
 /**
  * Manages the window for the game
  */
-public class Window {
+public class Window implements Observer{
     // private static final int GLFW_MOUSE_BUTTON_LEFT = 0;
     private int width, height;
     private String title;
@@ -70,11 +77,13 @@ public class Window {
     private static Window window = null;
 
     private static Scene currentScene;
+    private boolean isEditor = true;
 
     private Window() {
         this.width = 1920;
         this.height = 1080;
         this.title = "My Mario";
+        EventSystem.addObserver(this);
         r = 1;
         g = 1;
         b = 1;
@@ -87,20 +96,15 @@ public class Window {
      * LevelScene: For actual game play
      * @param newScene
      */
-    public static void changeScene(int newScene) {
-        switch (newScene) {
-            case 0:
-                currentScene = new LevelEditorScene();
-                break;
-            case 1:
-                currentScene = new LevelScene();
-                break;
-            default:
-                assert false : "unknow scene '" + newScene + "'";
-                break;
+    public static void changeScene(SceneInit sceneInit) {
+        if (currentScene != null) {
+            //destroy current scene
+            currentScene.destroy();
         }
-        
-        currentScene.load(); //load current level
+
+        getImGuiLayer().getPropertiesWindow().setActiveGameObject(null); //Ensure there is no active gameObject
+        currentScene = new Scene(sceneInit);
+        currentScene.load(); 
         currentScene.init(); 
         currentScene.start();
     }
@@ -203,7 +207,7 @@ public class Window {
         imguiLayer = new ImGuiLayer(glfwWindow, pickingTexture);
         imguiLayer.init();
 
-        Window.changeScene(0);
+        Window.changeScene(new LevelEditorSceneInit());
     }
 
     /**
@@ -252,7 +256,11 @@ public class Window {
 
                 //---------Render actual game using default shader-----------------
                 Renderer.bindShader(defaultShader);
-                currentScene.update(dt);
+                if (isEditor) {
+                    currentScene.editorUpdate(dt);
+                } else {
+                    currentScene.update(dt);
+                }
                 currentScene.render();
             }
 
@@ -269,9 +277,6 @@ public class Window {
             dt = endTime - beginTime;
             beginTime = endTime;
         }
-
-        currentScene.saveExit(); //Save current progress
-        this.imguiLayer.destroy();
     }
 
     public static ImGuiLayer getImGuiLayer() {
@@ -300,5 +305,26 @@ public class Window {
 
     public static float getTargetAspectRatio() {
         return (float) 16 / 9;
+    }
+
+    @Override
+    public void onNotify(GameObject object, Event event) {
+        if (event.type == EventType.GameEngineStart) { //Start game physics simulation
+            System.out.println("Start playing scene");
+            this.isEditor = false;
+            currentScene.save();//save current state
+            Window.changeScene(new LevelEditorSceneInit());//then reset
+
+        } else if (event.type == EventType.GameEngineStop) { //stop game physics simulation
+            System.out.println("Stop playing scene");
+            this.isEditor = true;
+            Window.changeScene(new LevelEditorSceneInit());//reset the state when runtime stops
+
+        } else if (event.type == EventType.LoadLevel) { 
+            Window.changeScene(new LevelEditorSceneInit());
+            
+        } else if (event.type == EventType.SaveLevel) {
+            currentScene.save();
+        }
     }
 }

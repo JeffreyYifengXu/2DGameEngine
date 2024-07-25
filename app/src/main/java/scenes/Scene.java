@@ -8,36 +8,47 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joml.Vector2f;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import components.AbstractDeserializer;
 import components.Component;
 import components.DeserializerComponent;
+import components.ShapeDeserializer;
 import engine.Camera;
 import engine.GameObject;
 import engine.GameObjectDeserializer;
 import engine.Transform;
+import gamePhysics.GamePhysicsWorld;
+import physicsEngine2D.primitives.Shape;
 import renderer.Renderer;
 
 
+public class Scene {
 
+    private Renderer renderer = new Renderer();
+    private Camera camera;
+    private boolean isRunning;
+    private List<GameObject> gameObjects = new ArrayList<>();
+    private boolean madeChanges = false;
 
-public abstract class Scene {
-
-    protected Renderer renderer = new Renderer();
-    protected Camera camera;
-    private boolean isRunning = false; 
-    protected List<GameObject> gameObjects = new ArrayList<>();
-    protected boolean levelLoaded = false;
-
-    protected boolean madeChanges = false;
+    private SceneInit sceneInit;
+    private GamePhysicsWorld physicsWorld;
     
-    public Scene() {
-
+    public Scene(SceneInit sceneInit) {
+        this.sceneInit = sceneInit;
+        this.physicsWorld = new GamePhysicsWorld();
+        this.renderer = new Renderer();
+        this.gameObjects = new ArrayList<>();
+        this.isRunning = false;
     }
 
     public void init() {
-        
+        this.camera = new Camera(new Vector2f(-250, 0));
+        this.sceneInit.loadResources(this);
+        this.sceneInit.init(this);
     }
 
     public void start() {
@@ -47,6 +58,7 @@ public abstract class Scene {
         for (GameObject go: gameObjects) {
             go.start();
             this.renderer.add(go);
+            // this.physicsWorld.addRigidBody(go, false);
         }
 
         isRunning = true;
@@ -60,6 +72,7 @@ public abstract class Scene {
             gameObjects.add(go);
             go.start();
             this.renderer.add(go);
+            // this.physicsWorld.addRigidBody(go, false);
         }
     }
 
@@ -72,9 +85,43 @@ public abstract class Scene {
         return null;
     }
 
-    public abstract void update(float dt);
+    public void editorUpdate(float dt) {
+        camera.adjustProjection();
+        //Currently no updates done to gameobjects
+        for (int i=0; i < gameObjects.size(); i++) {
+            GameObject go = gameObjects.get(i);
+            go.editorUpdate(dt);
 
-    public abstract void render();
+            if (go.isDead()) { //Remove dead game objects
+                gameObjects.remove(i);
+                this.renderer.destroyGameObject(go);
+                this.physicsWorld.destroyGameObject(go);
+                i--;
+            }
+        }
+    }
+
+    public void update(float dt) {
+        camera.adjustProjection();
+        this.physicsWorld.update(dt);
+
+        //Currently no updates done to gameobjects
+        for (int i=0; i < gameObjects.size(); i++) {
+            GameObject go = gameObjects.get(i);
+            go.update(dt);
+
+            if (go.isDead()) { //Remove dead game objects
+                gameObjects.remove(i);
+                this.renderer.destroyGameObject(go);
+                this.physicsWorld.destroyGameObject(go);
+                i--;
+            }
+        }
+    }
+
+    public void render() {
+        this.renderer.render();
+    }
 
     public Camera camera() {
         return this.camera;
@@ -88,14 +135,18 @@ public abstract class Scene {
         return go;
     }
 
-    public void imgui() {
+    public List<GameObject> getGameObjects() {
+        return this.gameObjects;
+    }
 
+    public void imgui() {
+        this.sceneInit.imgui();
     }
 
     /**
      * Serialize and save game data (Usiing custom serializer for gameobject)
      */
-    public void saveExit() {
+    public void save() {
         Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .registerTypeAdapter(Component.class, new DeserializerComponent())
@@ -130,6 +181,7 @@ public abstract class Scene {
             .setPrettyPrinting()
             .registerTypeAdapter(Component.class, new DeserializerComponent()) //Use custom deserializer for component
             .registerTypeAdapter(GameObject.class, new GameObjectDeserializer()) // Use custom deserializer for gameobject
+            .registerTypeAdapter(Shape.class, new ShapeDeserializer())
             .create();
         
         String inFile = "";
@@ -138,7 +190,6 @@ public abstract class Scene {
         File f = new File("level.txt");
         if (f.length() == 0) {
             System.out.println("Level not loaded, because level.txt is empty");
-            this.levelLoaded = false;
             return;
         }
 
@@ -180,23 +231,12 @@ public abstract class Scene {
             GameObject.init(maxGoId);
             Component.init(maxCompId);
         }
-
-        this.levelLoaded = true;
         System.out.println("Level successfully loaded");
     }
 
-    /*
-     * Remove the specified gameobject from the scene
-     */
-    public void removeGameObject(GameObject go) {
-        
-        gameObjects.remove(go);
-    }
-
-    //debug function
-    public void printAllGameObjects() {
-        for (GameObject ob: gameObjects) {
-            System.out.println(ob.getUid());
+    public void destroy() {
+        for (GameObject go : gameObjects) {
+            go.destroy();
         }
     }
 }
